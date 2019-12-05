@@ -53,11 +53,37 @@ namespace AdventOfCode2019
                     totalFuel += getFuelFromMass(i);
                 }
 
-                Console.WriteLine("Day1Puzzle1: Solution is " + totalFuel);
+                Console.WriteLine("Day1: Puzzle 1 Solution is " + totalFuel);
             }
         }
 
-        public static int getFuelFromMass(int massIn)
+        public void solvePuzzle2()
+        {
+            if(inputsLoaded)
+            {
+                int totalFuel = 0;
+
+                foreach (int i in inputs)
+                {
+                    int nextFuel = i;
+
+                    while(true)
+                    {
+                        int fuel = getFuelFromMass(nextFuel);
+                        
+                        if(fuel < 1)
+                            break;
+                        
+                        nextFuel = fuel;
+                        totalFuel += fuel;
+                    }
+                }
+
+                Console.WriteLine("Day1: Puzzle 2 Solution is " + totalFuel);
+            }
+        }
+
+        int getFuelFromMass(int massIn)
         {
             return (massIn / 3) - 2;
         }
