@@ -4,43 +4,62 @@ using System.Collections;
 
 namespace AdventOfCode2019
 {
-    // Take input of module mass. Fuel = half mass rounded down -2.
-
-    public class Day1Puzzle1
+    public class Day1
     {
         ArrayList inputs;
         bool inputsLoaded;
 
-        public Day1Puzzle1()
+        public Day1()
         {
             inputs = new ArrayList();
             inputsLoaded = false;
         }
-
         public void loadInputs(string fileLocation)
         {
-            if(File.Exists(fileLocation))
+            int totalFuel = 0;
+
+            if (File.Exists(fileLocation))
             {
                 string text = File.ReadAllText(fileLocation);
 
                 string[] numbers = text.Split(null);
 
-                foreach( var s in numbers )
+                foreach (var s in numbers)
                 {
-                    inputs.Add(int.Parse(s));
-                }
+                    int test = -1;
 
-                foreach( var i in inputs)
-                {
-                    Console.WriteLine(i);
+                    int.TryParse(s, out test);
+
+                    if (test != -1 && test != 0)
+                        inputs.Add(test);
                 }
 
                 inputsLoaded = true;
             }
             else
             {
-                Console.WriteLine("Day1Puzzle1: Invalid File Location");
+                Console.WriteLine("Day1: Invalid File Location");
             }
+        }
+
+        public void solvePuzzle1()
+        {
+            if (inputsLoaded)
+            {
+                int totalFuel = 0;
+
+                foreach (int i in inputs)
+                {
+                    totalFuel += getFuelFromMass(i);
+                }
+
+                Console.WriteLine("Day1Puzzle1: Solution is " + totalFuel);
+            }
+        }
+
+        public static int getFuelFromMass(int massIn)
+        {
+            return (massIn / 3) - 2;
         }
     }
 }
