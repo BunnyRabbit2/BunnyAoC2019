@@ -50,32 +50,7 @@ namespace AdventOfCode2019
             icP[1] = 12;
             icP[2] = 2;
             
-            for(int i = 0; i < icP.Length; i += 4)
-            {
-                if(icP[i] == 99) // Exit code
-                    break;
-
-                int[] program = {icP[i], icP[i+1], icP[i+2], icP[i+3]};
-
-                int first = icP[program[1]];
-                int second = icP[program[2]];
-                int result = 0;
-
-                if(program[0] == 1)
-                {
-                    result = first + second;
-                    icP[program[3]] = result;
-                }
-                else if(program[0] == 2)
-                {
-                    result = first * second;
-                    icP[program[3]] = result;
-                }
-                else
-                {
-                    Console.WriteLine("Day2: Puzzle2 error. program opcode not recognised - " + program[0]);
-                }
-            }
+            icP = IntcodeComputer.runIntcodeProgram(icP);
 
             Console.WriteLine("Day2: Puzzle 1 solution - " + icP[0]);
         }
