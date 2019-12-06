@@ -16,8 +16,6 @@ namespace AdventOfCode2019
         }
         public void loadInputs(string fileLocation)
         {
-            int totalFuel = 0;
-
             if (File.Exists(fileLocation))
             {
                 string text = File.ReadAllText(fileLocation);
