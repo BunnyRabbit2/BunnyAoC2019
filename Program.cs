@@ -22,6 +22,7 @@ namespace AdventOfCode2019
             Day2 d2 = new Day2();
             d2.loadIntCodeProgram("inputs/day2.txt");
             d2.solvePuzzle1();
+            d2.solvePuzzle2();
         }
 
     }
