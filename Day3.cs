@@ -55,19 +55,21 @@ namespace AdventOfCode2019
         public int X { get; }
         public int Y { get; }
         public int ManDist { get; }
+        public int WireLength { get; }
 
-        public Intersection(int xIn, int yIn)
+        public Intersection(int xIn, int yIn, int wireLengthIn)
         {
             X = xIn;
             Y = yIn;
             ManDist = Math.Abs(xIn) + Math.Abs(yIn);
+            WireLength = wireLengthIn;
         }
     }
 
     public class Day3
     {
         ArrayList line1Coords, line2Coords;
-        string line1, line2;
+        ArrayList intersections;
         bool inputsLoaded;
 
         public Day3()
@@ -85,12 +87,13 @@ namespace AdventOfCode2019
 
                 line1Coords = convertStringToCoords(lines[0]);
                 line2Coords = convertStringToCoords(lines[1]);
+                createIntersections();
 
                 inputsLoaded = true;
             }
             else
             {
-                Console.WriteLine("Day1: Invalid File Location");
+                Console.WriteLine("Day3: Invalid File Location");
             }
         }
 
@@ -137,29 +140,34 @@ namespace AdventOfCode2019
             return alOut;
         }
 
+        void createIntersections()
+        {
+            intersections = new ArrayList();
+
+            foreach (Line l in line1Coords)
+            {
+
+                foreach (Line l2 in line2Coords)
+                {
+
+                    int denom = l.A * l2.B - l2.A * l.B;
+
+                    if (denom == 0)
+                        continue;
+
+                    int p1 = (l2.B * l.C - l.B * l2.C) / denom;
+                    int p2 = (l.A * l2.C - l2.A * l.C) / denom;
+
+                    if (l.hasPoint(p1, p2) && l2.hasPoint(p1, p2))
+                        intersections.Add(new Intersection(p1, p2, -1));
+                }
+            }
+        }
+
         public void solvePuzzle1()
         {
             if (inputsLoaded)
             {
-                ArrayList intersections = new ArrayList();
-
-                foreach (Line l in line1Coords)
-                {
-                    foreach (Line l2 in line2Coords)
-                    {
-                        int denom = l.A * l2.B - l2.A * l.B;
-
-                        if (denom == 0)
-                            continue;
-
-                        int p1 = (l2.B * l.C - l.B * l2.C) / denom;
-                        int p2 = (l.A * l2.C - l2.A * l.C) / denom;
-
-                        if (l.hasPoint(p1, p2) && l2.hasPoint(p1, p2))
-                            intersections.Add(new Intersection(p1, p2));
-                    }
-                }
-
                 Intersection currentShortest = new Intersection();
 
                 foreach (Intersection i in intersections)
@@ -170,12 +178,12 @@ namespace AdventOfCode2019
                     }
                     else
                     {
-                        if(i.ManDist < currentShortest.ManDist)
+                        if (i.ManDist < currentShortest.ManDist)
                             currentShortest = i;
                     }
                 }
 
-                Console.WriteLine(currentShortest.ManDist);
+                Console.WriteLine("Day3: Puzzle 1 Solution is " + currentShortest.ManDist);
             }
         }
     }
