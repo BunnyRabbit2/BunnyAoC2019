@@ -6,7 +6,7 @@ namespace AdventOfCode2019
     {
         static void Main(string[] args)
         {
-            solveDay2();
+            solveDay3();
         }
 
         static void solveDay1()
@@ -23,6 +23,13 @@ namespace AdventOfCode2019
             d2.loadIntCodeProgram("inputs/day2.txt");
             d2.solvePuzzle1();
             d2.solvePuzzle2();
+        }
+
+        static void solveDay3()
+        {
+            Day3 d3 = new Day3();
+            d3.loadInputs("inputs/day3.txt");
+            d3.solvePuzzle1();
         }
 
     }
