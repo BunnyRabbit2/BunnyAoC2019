@@ -38,7 +38,7 @@ namespace AdventOfCode2019
             Day4 d4 = new Day4();
             d4.loadInputs("inputs/day4.txt");
             d4.solvePuzzle1();
-            // d4.solvePuzzle2();
+            d4.solvePuzzle2();
         }
     }
 }

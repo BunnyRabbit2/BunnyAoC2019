@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Collections;
 
 namespace AdventOfCode2019
 {
@@ -38,8 +39,97 @@ namespace AdventOfCode2019
         {
             if (inputsLoaded)
             {
-                Console.WriteLine("Checkmin = " + checkMin + " - Checkmax = " + checkMax);
+                ArrayList correctPasswords = new ArrayList();
+
+                for (int i = checkMin; i <= checkMax; i++)
+                {
+                    if (checkPasswordPuzzle1(i))
+                        correctPasswords.Add(i);
+                }
+
+                Console.WriteLine("Day4: Puzzle 1 Solution is " + correctPasswords.Count);
             }
+        }
+
+        public void solvePuzzle2()
+        {
+            if (inputsLoaded)
+            {
+                ArrayList correctPasswords = new ArrayList();
+
+                for (int i = checkMin; i <= checkMax; i++)
+                {
+                    if (checkPasswordPuzzle2(i))
+                        correctPasswords.Add(i);
+                }
+
+                Console.WriteLine("Day4: Puzzle 2 Solution is " + correctPasswords.Count);
+            }
+        }
+
+        bool checkPasswordPuzzle1(int pIn)
+        {
+            string pString = pIn.ToString();
+
+            //Rule 1.
+            if (pString.Length != 6)
+                return false;
+
+            if (pIn < checkMin || pIn > checkMax)
+                return false;
+
+            bool hasDouble = false;
+
+            for (int i = 0; i < 5; i++)
+            {
+                if (pString[i] > pString[i + 1])
+                    return false;
+                if (pString[i] == pString[i + 1])
+                {
+                    hasDouble = true;
+                }
+            }
+
+            return hasDouble;
+        }
+
+        bool checkPasswordPuzzle2(int pIn)
+        {
+            string pString = pIn.ToString();
+
+            //Rule 1.
+            if (pString.Length != 6)
+                return false;
+
+            if (pIn < checkMin || pIn > checkMax)
+                return false;
+
+            bool hasDouble = false;
+
+            for (int i = 0; i < 5; i++)
+            {
+                if (pString[i] > pString[i + 1])
+                    return false;
+                if (pString[i] == pString[i + 1])
+                {
+                    if(i == 4)
+                    {
+                        if(pString[i-1] != pString[i])
+                            hasDouble = true;
+                    }
+                    else if(i == 0)
+                    {
+                        if(pString[i+1] != pString[i+2])
+                            hasDouble = true;
+                    }
+                    else if(pString[i-1] != pString[i] && pString[i+1] != pString[i+2])
+                    {
+                        hasDouble = true;
+                    }
+                }
+            }
+
+            return hasDouble;
         }
     }
 }
