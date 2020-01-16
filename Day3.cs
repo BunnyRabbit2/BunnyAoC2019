@@ -144,14 +144,14 @@ namespace AdventOfCode2019
         {
             intersections = new ArrayList();
 
-            int l1Length = 0;
-
-            foreach (Line l in line1Coords)
+            for (int i = 0; i < line1Coords.Count; i++)
             {
-                int l2Length = 0;
+                Line l = (Line)line1Coords[i];
 
-                foreach (Line l2 in line2Coords)
+                for (int j = 0; j < line2Coords.Count; j++)
                 {
+                    Line l2 = (Line)line2Coords[j];
+
                     int denom = l.A * l2.B - l2.A * l.B;
 
                     if (denom == 0)
@@ -166,13 +166,11 @@ namespace AdventOfCode2019
                         int l1pLength = lengthBetweenTwoPoints(l.X1, l.Y1, p1, p2);
                         int l2pLength = lengthBetweenTwoPoints(l2.X1, l2.Y1, p1, p2);
 
-                        intersections.Add(new Intersection(p1, p2, l1Length + l2Length + l1pLength + l2pLength));
+                        int totalWireLength = getWireLengthToPoint(i, j, p1, p2);
+
+                        intersections.Add(new Intersection(p1, p2, totalWireLength));
                     }
-
-                    l2Length += l2.Length;
                 }
-
-                l1Length += l.Length;
             }
         }
 
@@ -184,6 +182,25 @@ namespace AdventOfCode2019
             int minY = Math.Min(y1, y2);
 
             return maxX - minX + maxY - minY;
+        }
+
+        int getWireLengthToPoint(int index1, int index2, int p1, int p2)
+        {
+            int length = 0;
+
+            for (int i = 0; i < index1; i++)
+            {
+                length += ((Line)line1Coords[i]).Length;
+            }
+            for (int i = 0; i < index2; i++)
+            {
+                length += ((Line)line2Coords[i]).Length;
+            }
+
+            length += lengthBetweenTwoPoints(((Line)line1Coords[index1]).X1, ((Line)line1Coords[index1]).Y1, p1, p2);
+            length += lengthBetweenTwoPoints(((Line)line2Coords[index2]).X1, ((Line)line2Coords[index2]).Y1, p1, p2);
+
+            return length;
         }
 
         public void solvePuzzle1()
