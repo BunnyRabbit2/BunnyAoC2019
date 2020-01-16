@@ -30,6 +30,7 @@ namespace AdventOfCode2019
             Day3 d3 = new Day3();
             d3.loadInputs("inputs/day3.txt");
             d3.solvePuzzle1();
+            d3.solvePuzzle2();
         }
 
     }

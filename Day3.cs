@@ -144,12 +144,14 @@ namespace AdventOfCode2019
         {
             intersections = new ArrayList();
 
+            int l1Length = 0;
+
             foreach (Line l in line1Coords)
             {
+                int l2Length = 0;
 
                 foreach (Line l2 in line2Coords)
                 {
-
                     int denom = l.A * l2.B - l2.A * l.B;
 
                     if (denom == 0)
@@ -159,9 +161,29 @@ namespace AdventOfCode2019
                     int p2 = (l.A * l2.C - l2.A * l.C) / denom;
 
                     if (l.hasPoint(p1, p2) && l2.hasPoint(p1, p2))
-                        intersections.Add(new Intersection(p1, p2, -1));
+                    {
+                        // Add last bit of length on
+                        int l1pLength = lengthBetweenTwoPoints(l.X1, l.Y1, p1, p2);
+                        int l2pLength = lengthBetweenTwoPoints(l2.X1, l2.Y1, p1, p2);
+
+                        intersections.Add(new Intersection(p1, p2, l1Length + l2Length + l1pLength + l2pLength));
+                    }
+
+                    l2Length += l2.Length;
                 }
+
+                l1Length += l.Length;
             }
+        }
+
+        int lengthBetweenTwoPoints(int x1, int y1, int x2, int y2)
+        {
+            int maxX = Math.Max(x1, x2);
+            int minX = Math.Min(x1, x2);
+            int maxY = Math.Max(y1, y2);
+            int minY = Math.Min(y1, y2);
+
+            return maxX - minX + maxY - minY;
         }
 
         public void solvePuzzle1()
@@ -184,6 +206,29 @@ namespace AdventOfCode2019
                 }
 
                 Console.WriteLine("Day3: Puzzle 1 Solution is " + currentShortest.ManDist);
+            }
+        }
+
+        public void solvePuzzle2()
+        {
+            if (inputsLoaded)
+            {
+                Intersection currentShortest = new Intersection();
+
+                foreach (Intersection i in intersections)
+                {
+                    if (currentShortest.Equals(default(Intersection)))
+                    {
+                        currentShortest = i;
+                    }
+                    else
+                    {
+                        if (i.WireLength < currentShortest.WireLength)
+                            currentShortest = i;
+                    }
+                }
+
+                Console.WriteLine("Day3: Puzzle 2 Solution is " + currentShortest.WireLength);
             }
         }
     }
