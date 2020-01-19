@@ -18,28 +18,10 @@ namespace AdventOfCode2019
 
         public void loadIntCodeProgram(string fileLocation)
         {
-            if (File.Exists(fileLocation))
-            {
-                string text = File.ReadAllText(fileLocation);
+            intCodeProgram = IntcodeComputer.loadIntCodeProgram(fileLocation);
 
-                string[] numbers = text.Split(",");
-
-                foreach (var s in numbers)
-                {
-                    int test = -1;
-
-                    int.TryParse(s, out test);
-
-                    if (test != -1)
-                        intCodeProgram.Add(test);
-                }
-
+            if(intCodeProgram.Count > 0)
                 intCodeProgramLoaded = true;
-            }
-            else
-            {
-                Console.WriteLine("Day2: Invalid File Location");
-            }
         }
 
         public void solvePuzzle1()
