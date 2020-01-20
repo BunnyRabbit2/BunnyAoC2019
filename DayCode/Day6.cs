@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace AdventOfCode2019
 {
@@ -14,11 +14,13 @@ namespace AdventOfCode2019
             d6.solvePuzzle2();
         }
 
-        string[] orbits;
+        string[] orbitCodes;
+        List<OrbitTreeNode> orbits;
         bool inputsLoaded;
 
         public Day6()
         {
+            orbits = new List<OrbitTreeNode>();
             inputsLoaded = false;
         }
 
@@ -26,7 +28,12 @@ namespace AdventOfCode2019
         {
             if (File.Exists(fileLocation))
             {
-                orbits = File.ReadAllText(fileLocation).Split(Environment.NewLine);
+                orbitCodes = File.ReadAllText(fileLocation).Split(Environment.NewLine);
+
+                foreach(string o in orbitCodes)
+                {
+                    OrbitTreeNode.AddOrbitToTree(orbits, o);
+                }
 
                 inputsLoaded = true;
             }

@@ -7,23 +7,14 @@ namespace AdventOfCode2019
     class OrbitTreeNode
     {
         public int ParentIndex { get; }
-        int childIndex;
-        public int ChildIndex
-        {
-            get { return childIndex; }
-            set
-            {
-                if (ChildIndex == -1)
-                    ChildIndex = value;
-            } // Ensures it can only be set once
-        }
+        public List<int> childrenIndexes;
         public string Planetcode { get; }
         public int DistanceToRoot { get; }
 
         public OrbitTreeNode()
         {
             ParentIndex = -1;
-            childIndex = -1;
+            childrenIndexes = new List<int>();
             Planetcode = "";
             DistanceToRoot = -1;
         }
@@ -31,7 +22,7 @@ namespace AdventOfCode2019
         public OrbitTreeNode(string codeIn, int dtrIn, int pIn = -1)
         {
             ParentIndex = pIn; // root node has -1 as parent
-            ChildIndex = -1;
+            childrenIndexes = new List<int>();
             Planetcode = codeIn;
             DistanceToRoot = dtrIn;
         }
@@ -61,7 +52,7 @@ namespace AdventOfCode2019
                 {
                     OrbitTreeNode newNode = new OrbitTreeNode(child, otn.DistanceToRoot + 1, pIndex);
                     orbits.Add(newNode);
-                    orbits[pIndex].ChildIndex = orbits.IndexOf(newNode);
+                    orbits[pIndex].childrenIndexes.Add(orbits.IndexOf(newNode));
                 }
                 else
                 {
