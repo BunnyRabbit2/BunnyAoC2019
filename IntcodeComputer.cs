@@ -32,6 +32,7 @@ namespace AdventOfCode2019
                     break;
 
                 int opcode = icPIn[i] % 10; // Gets the final two digits no matter what else is there
+
                 int firstMode = (icPIn[i]/100) % 10;
                 int secondMode = (icPIn[i]/1000) % 10;
                 int thirdMode = (icPIn[i]/10000) % 10;
@@ -40,6 +41,19 @@ namespace AdventOfCode2019
                 int secondParam = icPIn[i+2];
                 int thirdParam = icPIn[i+3];
 
+                if(opcode == 3) // Input opcode
+                {
+                    icPIn[firstParam] = inputToUse;
+                    i += 2;
+                    continue;
+                }
+                else if(opcode == 4) // Output opcode
+                {
+                    if(icPIn[i+2] == 99) // Program terminating
+                        return icPIn[firstParam];
+                    i += 2;
+                    continue;
+                }
                 int firstValue = (firstMode == 1) ? firstParam : icPIn[firstParam];
                 int secondValue = (secondMode == 1) ? secondParam : icPIn[secondParam];
 
@@ -47,24 +61,54 @@ namespace AdventOfCode2019
                 {
                     icPIn[thirdParam] = firstValue + secondValue;
                     i += 4;
+                    continue;
                 }
                 else if(opcode == 2) // multiplication opcode
                 {
                     icPIn[thirdParam] = firstValue * secondValue;
                     i += 4;
+                    continue;
                 }
-                else if(opcode == 3)
+                else if(opcode == 5)
                 {
-                    icPIn[firstParam] = inputToUse;
-                    i += 2;
+                    if(firstValue != 0)
+                        i = secondValue;
+                    else
+                        i += 3;
+                    continue;
                 }
-                else if(opcode == 4)
+                else if(opcode == 6)
                 {
-                    return icPIn[firstParam];
+                    if(firstValue == 0)
+                        i = secondValue;
+                    else
+                        i += 3;
+                    continue;
+                }
+                else if(opcode == 7)
+                {
+                    if(firstValue < secondValue)
+                        icPIn[thirdParam] = 1;
+                    else
+                        icPIn[thirdParam] = 0;
+
+                    i += 4;
+                    continue;
+                }
+                else if(opcode == 8)
+                {
+                    if(firstValue == secondValue)
+                        icPIn[thirdParam] = 1;
+                    else
+                        icPIn[thirdParam] = 0;
+
+                    i += 4;
+                    continue;
                 }
                 else
                 {
                     Console.WriteLine("IntcodeComputer error. Program opcode not recognised - " + opcode);
+                    break; // Forgot this before. Caused an infinite loop and locked shit up. Nice.
                 }
             }
 

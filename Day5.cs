@@ -39,7 +39,11 @@ namespace AdventOfCode2019
         {
             if (intCodeProgramLoaded)
             {
-                
+                int[] icP = (int[])intCodeProgram.Clone();
+
+                int result = IntcodeComputer.runIntcodeProgram(icP, inputToUse: 5);
+
+                Console.WriteLine("Day5: Puzzle 2 solution - " + result);
             }
         }
     }
