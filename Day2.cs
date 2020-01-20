@@ -27,15 +27,15 @@ namespace AdventOfCode2019
         {
             if (intCodeProgramLoaded)
             {
-                int[] icP = intCodeProgram.OfType<int>().ToArray();
+                int[] icP = (int[])intCodeProgram.Clone();
 
                 // Pre running operations
                 icP[1] = 12;
                 icP[2] = 2;
 
-                icP = IntcodeComputer.runIntcodeProgram(icP);
+                int result = IntcodeComputer.runIntcodeProgram(icP);
 
-                Console.WriteLine("Day2: Puzzle 1 solution - " + icP[0]);
+                Console.WriteLine("Day2: Puzzle 1 solution - " + result);
             }
         }
 
@@ -52,14 +52,14 @@ namespace AdventOfCode2019
                 {
                     for(int v = 0; v < 99; v++)
                     {
-                        int[] icP = intCodeProgram.OfType<int>().ToArray();
+                        int[] icP = (int[])intCodeProgram.Clone();
 
                         icP[1] = n;
                         icP[2] = v;
 
-                        int[] test = IntcodeComputer.runIntcodeProgram(icP);
+                        int test = IntcodeComputer.runIntcodeProgram(icP);
 
-                        if(test[0] == wantedResult)
+                        if(test == wantedResult)
                         {
                             noun = n;
                             verb = v;

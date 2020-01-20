@@ -24,7 +24,7 @@ namespace AdventOfCode2019
             }
         }
 
-        public static int[] runIntcodeProgram(int[] icPIn)
+        public static int runIntcodeProgram(int[] icPIn, int resultAddress = 0, int inputToUse = 0)
         {
             for(int i = 0; i < icPIn.Length; i += 0)
             {
@@ -32,18 +32,35 @@ namespace AdventOfCode2019
                     break;
 
                 int opcode = icPIn[i] % 10; // Gets the final two digits no matter what else is there
+                int firstMode = (icPIn[i]/100) % 10;
+                int secondMode = (icPIn[i]/1000) % 10;
+                int thirdMode = (icPIn[i]/10000) % 10;
+
+                int firstParam = icPIn[i+1];
+                int secondParam = icPIn[i+2];
+                int thirdParam = icPIn[i+3];
+
+                int firstValue = (firstMode == 1) ? firstParam : icPIn[firstParam];
+                int secondValue = (secondMode == 1) ? secondParam : icPIn[secondParam];
 
                 if(opcode == 1) // addition opcode
                 {
-                    // Result = first + second
-                    icPIn[icPIn[i+3]] = icPIn[icPIn[i+1]] + icPIn[icPIn[i+2]];
+                    icPIn[thirdParam] = firstValue + secondValue;
                     i += 4;
                 }
                 else if(opcode == 2) // multiplication opcode
                 {
-                    // Result = first * second
-                    icPIn[icPIn[i+3]] = icPIn[icPIn[i+1]] * icPIn[icPIn[i+2]];
+                    icPIn[thirdParam] = firstValue * secondValue;
                     i += 4;
+                }
+                else if(opcode == 3)
+                {
+                    icPIn[firstParam] = inputToUse;
+                    i += 2;
+                }
+                else if(opcode == 4)
+                {
+                    return icPIn[firstParam];
                 }
                 else
                 {
@@ -51,7 +68,7 @@ namespace AdventOfCode2019
                 }
             }
 
-            return icPIn;
+            return icPIn[resultAddress];
         }
     }
 }
