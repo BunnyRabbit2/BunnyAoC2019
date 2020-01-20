@@ -7,61 +7,47 @@ namespace AdventOfCode2019
 {
     public class IntcodeComputer
     {
-        public static ArrayList loadIntCodeProgram(String fileLocation)
+        public static int[] loadIntCodeProgram(String fileLocation)
         {
-            ArrayList intCodeProgram = new ArrayList();
+            int[] intCodeProgram;
 
             if (File.Exists(fileLocation))
             {
-                string text = File.ReadAllText(fileLocation);
-
-                string[] numbers = text.Split(",");
-
-                foreach (var s in numbers)
-                {
-                    int test = -1;
-
-                    int.TryParse(s, out test);
-
-                    if (test != -1)
-                        intCodeProgram.Add(test);
-                }
+                intCodeProgram = File.ReadAllText(fileLocation).Split(',').Select(l => int.Parse(l)).ToArray();
 
                 return intCodeProgram;
             }
             else
             {
                 Console.WriteLine("Intcode Computer: Invalid File Location");
-                return intCodeProgram;
+                return new int[0];
             }
         }
 
         public static int[] runIntcodeProgram(int[] icPIn)
         {
-            for(int i = 0; i < icPIn.Length; i += 4)
+            for(int i = 0; i < icPIn.Length; i += 0)
             {
                 if(icPIn[i] == 99) // Exit opcode
                     break;
 
-                int[] program = {icPIn[i], icPIn[i+1], icPIn[i+2], icPIn[i+3]};
+                int opcode = icPIn[i] % 10; // Gets the final two digits no matter what else is there
 
-                int first = icPIn[program[1]];
-                int second = icPIn[program[2]];
-                int result = 0;
-
-                if(program[0] == 1) // addition opcode
+                if(opcode == 1) // addition opcode
                 {
-                    result = first + second;
-                    icPIn[program[3]] = result;
+                    // Result = first + second
+                    icPIn[icPIn[i+3]] = icPIn[icPIn[i+1]] + icPIn[icPIn[i+2]];
+                    i += 4;
                 }
-                else if(program[0] == 2) // multiplication opcode
+                else if(opcode == 2) // multiplication opcode
                 {
-                    result = first * second;
-                    icPIn[program[3]] = result;
+                    // Result = first * second
+                    icPIn[icPIn[i+3]] = icPIn[icPIn[i+1]] * icPIn[icPIn[i+2]];
+                    i += 4;
                 }
                 else
                 {
-                    Console.WriteLine("IntcodeComputer error. Program opcode not recognised - " + program[0]);
+                    Console.WriteLine("IntcodeComputer error. Program opcode not recognised - " + opcode);
                 }
             }
 

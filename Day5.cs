@@ -7,12 +7,11 @@ namespace AdventOfCode2019
 {
     public class Day5
     {
-        ArrayList intCodeProgram;
+        int[] intCodeProgram;
         bool intCodeProgramLoaded;
 
         public Day5()
         {
-            intCodeProgram = new ArrayList();
             intCodeProgramLoaded = false;
         }
 
@@ -20,7 +19,7 @@ namespace AdventOfCode2019
         {
             intCodeProgram = IntcodeComputer.loadIntCodeProgram(fileLocation);
 
-            if(intCodeProgram.Count > 0)
+            if(intCodeProgram.Length > 0)
                 intCodeProgramLoaded = true;
         }
 
