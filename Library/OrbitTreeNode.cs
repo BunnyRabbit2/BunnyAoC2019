@@ -6,68 +6,124 @@ namespace AdventOfCode2019
 {
     class OrbitTreeNode
     {
-        public int ParentIndex { get; }
-        public List<int> childrenIndexes;
+        public OrbitTreeNode parentNode;
+        public List<OrbitTreeNode> childNodes;
+        public string parentCode;
         public string Planetcode { get; }
-        public int DistanceToRoot { get; }
+        public int distanceToRoot;
 
         public OrbitTreeNode()
         {
-            ParentIndex = -1;
-            childrenIndexes = new List<int>();
+            childNodes = new List<OrbitTreeNode>();
             Planetcode = "";
-            DistanceToRoot = -1;
+            parentCode = "";
+            distanceToRoot = -1;
         }
 
-        public OrbitTreeNode(string codeIn, int dtrIn, int pIn = -1)
+        public OrbitTreeNode(string codeIn, string pCodeIn)
         {
-            ParentIndex = pIn; // root node has -1 as parent
-            childrenIndexes = new List<int>();
+            childNodes = new List<OrbitTreeNode>();
             Planetcode = codeIn;
-            DistanceToRoot = dtrIn;
+            parentCode = pCodeIn;
+            distanceToRoot = -1;
         }
 
-        public static bool AddOrbitToTree(List<OrbitTreeNode> orbits, string parent, string child)
+        public static void AddOrbitToTree(List<OrbitTreeNode> orbits, string parent, string child)
         {
-            if(parent == "root")
+            OrbitTreeNode otn = new OrbitTreeNode();
+            int pIndex = -1;
+            int cIndex = -1;
+
+            for (int i = 0; i < orbits.Count; i++)
             {
-                orbits.Add(new OrbitTreeNode(child, 0));
+                if (orbits[i].Planetcode == parent)
+                {
+                    pIndex = i;
+                }
+                if (orbits[i].Planetcode == child)
+                {
+                    cIndex = i;
+                }
             }
-            else if (parent != "")
+
+            if (pIndex == -1)
             {
-                OrbitTreeNode otn = new OrbitTreeNode();
+                orbits.Add(new OrbitTreeNode(parent, ""));
+
+            }
+
+            if (cIndex != -1)
+            {
+                orbits[cIndex].parentCode = parent;
+            }
+            else
+            {
+                orbits.Add(new OrbitTreeNode(child, parent));
+            }
+        }
+
+        public static void AddOrbitToTree(List<OrbitTreeNode> orbits, string orbitCode)
+        {
+            if (orbitCode != "")
+            {
+                string[] codes = orbitCode.Split(')');
+
+                OrbitTreeNode.AddOrbitToTree(orbits, codes[0], codes[1]);
+            }
+        }
+
+        public static void SetParentChildRelationships(List<OrbitTreeNode> orbits)
+        {
+            foreach (OrbitTreeNode otn in orbits)
+            {
                 int pIndex = -1;
 
                 for (int i = 0; i < orbits.Count; i++)
                 {
-                    if (orbits[i].Planetcode == parent)
+                    if (orbits[i].Planetcode == otn.parentCode)
                     {
-                        otn = orbits[i];
                         pIndex = i;
                         break;
                     }
                 }
 
-                if(!otn.Equals(default(OrbitTreeNode)))
+                if (pIndex != -1)
                 {
-                    OrbitTreeNode newNode = new OrbitTreeNode(child, otn.DistanceToRoot + 1, pIndex);
-                    orbits.Add(newNode);
-                    orbits[pIndex].childrenIndexes.Add(orbits.IndexOf(newNode));
+                    otn.parentNode = orbits[pIndex];
+                    orbits[pIndex].childNodes.Add(otn);
                 }
-                else
+            }
+        }
+
+        public static void SetDistancesFromRoot(List<OrbitTreeNode> orbits)
+        {
+            int rIndex = -1;
+
+            for (int i = 0; i < orbits.Count; i++)
+            {
+                if (orbits[i].parentCode == "")
                 {
-                    return false; // No parent found and new node isn't root, shit did not work
+                    rIndex = i;
+                    break;
                 }
             }
 
-            return true; // Shit worked
+            OrbitTreeNode root = orbits[rIndex];
+            root.distanceToRoot = 0;
+
+            foreach(OrbitTreeNode c in root.childNodes)
+            {
+                OrbitTreeNode.SetChildrenDistance(c);
+            }
         }
 
-        public static bool AddOrbitToTree(List<OrbitTreeNode> orbits, string orbitCode)
+        public static void SetChildrenDistance(OrbitTreeNode node)
         {
-            string[] codes = orbitCode.Split(')');
-
-            return OrbitTreeNode.AddOrbitToTree(orbits, codes[0], codes[1]);
+            node.distanceToRoot = node.parentNode.distanceToRoot + 1;
+            foreach(OrbitTreeNode c in node.childNodes)
+            {
+                OrbitTreeNode.SetChildrenDistance(c);
+            }
         }
     }
 }

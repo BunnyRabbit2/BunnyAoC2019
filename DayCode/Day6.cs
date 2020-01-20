@@ -34,6 +34,9 @@ namespace AdventOfCode2019
                 {
                     OrbitTreeNode.AddOrbitToTree(orbits, o);
                 }
+                OrbitTreeNode.SetParentChildRelationships(orbits);
+
+                OrbitTreeNode.SetDistancesFromRoot(orbits);
 
                 inputsLoaded = true;
             }
@@ -47,7 +50,14 @@ namespace AdventOfCode2019
         {
             if (inputsLoaded)
             {
-                
+                int totalOrbits = 0;
+
+                foreach(OrbitTreeNode n in orbits)
+                {
+                    totalOrbits += n.distanceToRoot;
+                }
+
+                Console.WriteLine("Day6: Puzzle 1 solution - " + totalOrbits);
             }
         }
 
