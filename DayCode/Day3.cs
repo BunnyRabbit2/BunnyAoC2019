@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace AdventOfCode2019
@@ -15,8 +15,8 @@ namespace AdventOfCode2019
             d3.solvePuzzle2();
         }
 
-        ArrayList line1Coords, line2Coords;
-        ArrayList intersections;
+        List<Line> line1Coords, line2Coords;
+        List<Intersection> intersections;
         bool inputsLoaded;
 
         public Day3()
@@ -28,9 +28,7 @@ namespace AdventOfCode2019
         {
             if (File.Exists(fileLocation))
             {
-                string text = File.ReadAllText(fileLocation);
-
-                string[] lines = text.Split("\r\n");
+                string[] lines = File.ReadAllText(fileLocation).Split(Environment.NewLine);
 
                 line1Coords = convertStringToCoords(lines[0]);
                 line2Coords = convertStringToCoords(lines[1]);
@@ -44,9 +42,9 @@ namespace AdventOfCode2019
             }
         }
 
-        ArrayList convertStringToCoords(string input)
+        List<Line> convertStringToCoords(string input)
         {
-            ArrayList alOut = new ArrayList();
+            List<Line> alOut = new List<Line>();
 
             string[] instructions = input.Split(",");
             int currentX = 0, currentY = 0;
@@ -89,7 +87,7 @@ namespace AdventOfCode2019
 
         void createIntersections()
         {
-            intersections = new ArrayList();
+            intersections = new List<Intersection>();
 
             for (int i = 0; i < line1Coords.Count; i++)
             {

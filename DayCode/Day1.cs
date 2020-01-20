@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections;
+using System.Linq;
 
 namespace AdventOfCode2019
 {
@@ -14,31 +15,18 @@ namespace AdventOfCode2019
             d1.solvePuzzle2();
         }
 
-        ArrayList inputs;
+        int[] inputs;
         bool inputsLoaded;
 
         public Day1()
         {
-            inputs = new ArrayList();
             inputsLoaded = false;
         }
         public void loadInputs(string fileLocation)
         {
             if (File.Exists(fileLocation))
             {
-                string text = File.ReadAllText(fileLocation);
-
-                string[] numbers = text.Split(Environment.NewLine);
-
-                foreach (var s in numbers)
-                {
-                    int test = -1;
-
-                    int.TryParse(s, out test);
-
-                    if (test != -1 && test != 0)
-                        inputs.Add(test);
-                }
+                inputs = File.ReadAllText(fileLocation).Split(Environment.NewLine).Select(l => int.Parse(l)).ToArray();
 
                 inputsLoaded = true;
             }

@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace AdventOfCode2019
 {
@@ -28,9 +28,7 @@ namespace AdventOfCode2019
         {
             if (File.Exists(fileLocation))
             {
-                string text = File.ReadAllText(fileLocation);
-
-                string[] numbers = text.Split('-');
+                string[] numbers = File.ReadAllText(fileLocation).Split('-');;
 
                 int.TryParse(numbers[0], out checkMin);
                 int.TryParse(numbers[1], out checkMax);
@@ -47,7 +45,7 @@ namespace AdventOfCode2019
         {
             if (inputsLoaded)
             {
-                ArrayList correctPasswords = new ArrayList();
+                List<int> correctPasswords = new List<int>();
 
                 for (int i = checkMin; i <= checkMax; i++)
                 {
@@ -63,7 +61,7 @@ namespace AdventOfCode2019
         {
             if (inputsLoaded)
             {
-                ArrayList correctPasswords = new ArrayList();
+                List<int> correctPasswords = new List<int>();
 
                 for (int i = checkMin; i <= checkMax; i++)
                 {
