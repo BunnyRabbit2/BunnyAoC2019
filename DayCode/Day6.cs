@@ -53,7 +53,7 @@ namespace AdventOfCode2019
         {
             if (inputsLoaded)
             {
-                
+                Console.WriteLine("Day6: Puzzle 2 solution - " + oTree.getDistanceBetweenTwoOrbits("YOU", "SAN"));
             }
         }
     }

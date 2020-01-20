@@ -132,5 +132,89 @@ namespace AdventOfCode2019
 
             return totalOrbits;
         }
+
+        public int getDistanceBetweenTwoOrbits(string startNode, string endNode)
+        {
+            int distance = 0;
+
+            OrbitTreeNode start = new OrbitTreeNode();
+            OrbitTreeNode end = new OrbitTreeNode();
+
+            for (int i = 0; i < orbits.Count; i++)
+            {
+                if (orbits[i].Planetcode == startNode)
+                {
+                    start = orbits[i];
+                    break;
+                }
+            }
+            for (int i = 0; i < orbits.Count; i++)
+            {
+                if (orbits[i].Planetcode == endNode)
+                {
+                    end = orbits[i];
+                    break;
+                }
+            }
+
+            List<OrbitTreeNode> startRoute = getRouteToRoot(start);
+            List<OrbitTreeNode> endRoute = getRouteToRoot(end);
+
+            OrbitTreeNode matchingNode = new OrbitTreeNode("UNSET", "UNSET");
+
+            bool breakLoop = false;
+
+            foreach(OrbitTreeNode sNode in startRoute)
+            {
+                foreach(OrbitTreeNode eNode in endRoute)
+                {
+                    if(sNode.Planetcode == eNode.Planetcode)
+                    {
+                        matchingNode = eNode;
+                        breakLoop = true;
+                        break;
+                    }
+                }
+                if(breakLoop) break;
+            }
+
+            if(matchingNode.parentCode != "UNSET")
+            {
+                distance = startRoute.Count + endRoute.Count - (matchingNode.distanceToRoot * 2);
+                distance -= 2; // Dont include the start or end
+            }
+
+            return distance;
+        }
+
+        public List<OrbitTreeNode> getRouteToRoot(OrbitTreeNode nodeIn)
+        {
+            List<OrbitTreeNode> route = new List<OrbitTreeNode>();
+
+            OrbitTreeNode currentNode = nodeIn;
+
+            while(currentNode.parentCode != "")
+            {
+                route.Add(currentNode);
+                currentNode = currentNode.parentNode;
+            }
+
+            return route;
+        }
+
+        public List<OrbitTreeNode> getRouteToNode(OrbitTreeNode nodeIn, OrbitTreeNode targetNode)
+        {
+            List<OrbitTreeNode> route = new List<OrbitTreeNode>();
+
+            OrbitTreeNode currentNode = nodeIn;
+
+            while(currentNode.parentCode != targetNode.parentCode)
+            {
+                route.Add(currentNode);
+                currentNode = currentNode.parentNode;
+            }
+
+            return route;
+        }
     }
 }
