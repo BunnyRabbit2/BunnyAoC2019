@@ -6,6 +6,8 @@ namespace AdventOfCode2019
 {
     public class Day6
     {
+        OrbitTree oTree;
+
         public static void solveDay6()
         {
             Day6 d6 = new Day6();
@@ -15,12 +17,11 @@ namespace AdventOfCode2019
         }
 
         string[] orbitCodes;
-        List<OrbitTreeNode> orbits;
         bool inputsLoaded;
 
         public Day6()
         {
-            orbits = new List<OrbitTreeNode>();
+            oTree = new OrbitTree();
             inputsLoaded = false;
         }
 
@@ -30,13 +31,7 @@ namespace AdventOfCode2019
             {
                 orbitCodes = File.ReadAllText(fileLocation).Split(Environment.NewLine);
 
-                foreach(string o in orbitCodes)
-                {
-                    OrbitTreeNode.AddOrbitToTree(orbits, o);
-                }
-                OrbitTreeNode.SetParentChildRelationships(orbits);
-
-                OrbitTreeNode.SetDistancesFromRoot(orbits);
+                oTree.createTree(orbitCodes);
 
                 inputsLoaded = true;
             }
@@ -50,14 +45,7 @@ namespace AdventOfCode2019
         {
             if (inputsLoaded)
             {
-                int totalOrbits = 0;
-
-                foreach(OrbitTreeNode n in orbits)
-                {
-                    totalOrbits += n.distanceToRoot;
-                }
-
-                Console.WriteLine("Day6: Puzzle 1 solution - " + totalOrbits);
+                Console.WriteLine("Day6: Puzzle 1 solution - " + oTree.getTotalOrbits());
             }
         }
 
