@@ -7,6 +7,14 @@ namespace AdventOfCode2019
 {
     public class Day5
     {
+        public static void solveDay5()
+        {
+            Day5 d5 = new Day5();
+            d5.loadIntCodeProgram("inputs/day5.txt");
+            d5.solvePuzzle1();
+            d5.solvePuzzle2();
+        }
+
         int[] intCodeProgram;
         bool intCodeProgramLoaded;
 
