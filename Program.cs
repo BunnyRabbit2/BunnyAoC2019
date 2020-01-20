@@ -6,47 +6,11 @@ namespace AdventOfCode2019
     {
         static void Main(string[] args)
         {
-            solveDay5();
-        }
-
-        static void solveDay1()
-        {
-            Day1 d1 = new Day1();
-            d1.loadInputs("inputs/day1.txt");
-            d1.solvePuzzle1();
-            d1.solvePuzzle2();
-        }
-
-        static void solveDay2()
-        {
-            Day2 d2 = new Day2();
-            d2.loadIntCodeProgram("inputs/day2.txt");
-            d2.solvePuzzle1();
-            d2.solvePuzzle2();
-        }
-
-        static void solveDay3()
-        {
-            Day3 d3 = new Day3();
-            d3.loadInputs("inputs/day3.txt");
-            d3.solvePuzzle1();
-            d3.solvePuzzle2();
-        }
-
-        static void solveDay4()
-        {
-            Day4 d4 = new Day4();
-            d4.loadInputs("inputs/day4.txt");
-            d4.solvePuzzle1();
-            d4.solvePuzzle2();
-        }
-
-        static void solveDay5()
-        {
-            Day5 d5 = new Day5();
-            d5.loadIntCodeProgram("inputs/day5.txt");
-            d5.solvePuzzle1();
-            d5.solvePuzzle2();
+            // Day1.solveDay1();
+            // Day2.solveDay2();
+            // Day3.solveDay3();
+            // Day4.solveDay4();
+            // Day5.solveDay5();
         }
     }
 }

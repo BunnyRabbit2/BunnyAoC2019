@@ -6,6 +6,14 @@ namespace AdventOfCode2019
 {
     public class Day4
     {
+        public static void solveDay4()
+        {
+            Day4 d4 = new Day4();
+            d4.loadInputs("inputs/day4.txt");
+            d4.solvePuzzle1();
+            d4.solvePuzzle2();
+        }
+
         int checkMin, checkMax;
         bool inputsLoaded;
 
@@ -47,7 +55,7 @@ namespace AdventOfCode2019
                         correctPasswords.Add(i);
                 }
 
-                Console.WriteLine("Day4: Puzzle 1 Solution is " + correctPasswords.Count);
+                Console.WriteLine("Day4: Puzzle 1 Solution - " + correctPasswords.Count);
             }
         }
 
@@ -63,7 +71,7 @@ namespace AdventOfCode2019
                         correctPasswords.Add(i);
                 }
 
-                Console.WriteLine("Day4: Puzzle 2 Solution is " + correctPasswords.Count);
+                Console.WriteLine("Day4: Puzzle 2 Solution - " + correctPasswords.Count);
             }
         }
 

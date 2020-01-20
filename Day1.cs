@@ -6,6 +6,14 @@ namespace AdventOfCode2019
 {
     public class Day1
     {
+        public static void solveDay1()
+        {
+            Day1 d1 = new Day1();
+            d1.loadInputs("inputs/day1.txt");
+            d1.solvePuzzle1();
+            d1.solvePuzzle2();
+        }
+
         ArrayList inputs;
         bool inputsLoaded;
 
@@ -20,7 +28,7 @@ namespace AdventOfCode2019
             {
                 string text = File.ReadAllText(fileLocation);
 
-                string[] numbers = text.Split(null);
+                string[] numbers = text.Split(Environment.NewLine);
 
                 foreach (var s in numbers)
                 {
@@ -51,7 +59,7 @@ namespace AdventOfCode2019
                     totalFuel += getFuelFromMass(i);
                 }
 
-                Console.WriteLine("Day1: Puzzle 1 Solution is " + totalFuel);
+                Console.WriteLine("Day1: Puzzle 1 Solution - " + totalFuel);
             }
         }
 
@@ -77,7 +85,7 @@ namespace AdventOfCode2019
                     }
                 }
 
-                Console.WriteLine("Day1: Puzzle 2 Solution is " + totalFuel);
+                Console.WriteLine("Day1: Puzzle 2 Solution - " + totalFuel);
             }
         }
 

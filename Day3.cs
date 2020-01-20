@@ -68,6 +68,14 @@ namespace AdventOfCode2019
 
     public class Day3
     {
+        public static void solveDay3()
+        {
+            Day3 d3 = new Day3();
+            d3.loadInputs("inputs/day3.txt");
+            d3.solvePuzzle1();
+            d3.solvePuzzle2();
+        }
+
         ArrayList line1Coords, line2Coords;
         ArrayList intersections;
         bool inputsLoaded;
@@ -222,7 +230,7 @@ namespace AdventOfCode2019
                     }
                 }
 
-                Console.WriteLine("Day3: Puzzle 1 Solution is " + currentShortest.ManDist);
+                Console.WriteLine("Day3: Puzzle 1 Solution - " + currentShortest.ManDist);
             }
         }
 
@@ -245,7 +253,7 @@ namespace AdventOfCode2019
                     }
                 }
 
-                Console.WriteLine("Day3: Puzzle 2 Solution is " + currentShortest.WireLength);
+                Console.WriteLine("Day3: Puzzle 2 Solution - " + currentShortest.WireLength);
             }
         }
     }
