@@ -8,12 +8,13 @@ namespace AdventOfCode2019
         {
             Console.WriteLine("Starting Advent of Code 2019 program version: " + System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
             
-            Day1.solveDay1();
+            // Day1.solveDay1();
             Day2.solveDay2();
-            Day3.solveDay3();
-            Day4.solveDay4();
+            // Day3.solveDay3();
+            // Day4.solveDay4();
             Day5.solveDay5();
-            Day6.solveDay6();
+            // Day6.solveDay6();
+            Day7.solveDay7();
         }
     }
 }

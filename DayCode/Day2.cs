@@ -41,7 +41,7 @@ namespace AdventOfCode2019
                 icP[1] = 12;
                 icP[2] = 2;
 
-                int result = IntcodeComputer.runIntcodeProgram(icP);
+                int result = IntcodeComputer.runIntcodeProgram(icP)[0];
 
                 Console.WriteLine("Day2: Puzzle 1 solution - " + result);
             }
@@ -65,7 +65,7 @@ namespace AdventOfCode2019
                         icP[1] = n;
                         icP[2] = v;
 
-                        int test = IntcodeComputer.runIntcodeProgram(icP);
+                        int test = IntcodeComputer.runIntcodeProgram(icP)[0];
 
                         if(test == wantedResult)
                         {

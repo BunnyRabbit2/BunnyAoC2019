@@ -27,7 +27,7 @@ namespace AdventOfCode2019
         {
             intCodeProgram = IntcodeComputer.loadIntCodeProgram(fileLocation);
 
-            if(intCodeProgram.Length > 0)
+            if (intCodeProgram.Length > 0)
                 intCodeProgramLoaded = true;
         }
 
@@ -37,7 +37,9 @@ namespace AdventOfCode2019
             {
                 int[] icP = (int[])intCodeProgram.Clone();
 
-                int result = IntcodeComputer.runIntcodeProgram(icP, inputToUse: 1);
+                int[] input = new int[] { 1 };
+                int[] output = IntcodeComputer.runIntcodeProgram(icP, inputsIn: input);
+                int result = output[output.Length-1];
 
                 Console.WriteLine("Day5: Puzzle 1 solution - " + result);
             }
@@ -49,7 +51,9 @@ namespace AdventOfCode2019
             {
                 int[] icP = (int[])intCodeProgram.Clone();
 
-                int result = IntcodeComputer.runIntcodeProgram(icP, inputToUse: 5);
+                int[] input = new int[] { 5 };
+                int[] output = IntcodeComputer.runIntcodeProgram(icP, inputsIn: input);
+                int result = output[output.Length-1];
 
                 Console.WriteLine("Day5: Puzzle 2 solution - " + result);
             }
