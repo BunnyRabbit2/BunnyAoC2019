@@ -7,6 +7,8 @@ namespace AdventOfCode2019
 {
     public class Day8
     {
+        SpaceImageFormat image;
+
         public static void solveDay8()
         {
             Day8 d8 = new Day8();
@@ -15,7 +17,6 @@ namespace AdventOfCode2019
             d8.solvePuzzle2();
         }
 
-        int[] inputs;
         bool inputsLoaded;
 
         public Day8()
@@ -26,7 +27,9 @@ namespace AdventOfCode2019
         {
             if (File.Exists(fileLocation))
             {
-                inputs = File.ReadAllText(fileLocation).ToCharArray().Select(l => int.Parse(l.ToString())).ToArray();
+                int[] inputs = File.ReadAllText(fileLocation).ToCharArray().Select(l => int.Parse(l.ToString())).ToArray();
+
+                image = new SpaceImageFormat(inputs, 25, 6); // w and h provided by AoC
 
                 inputsLoaded = true;
             }
@@ -40,8 +43,7 @@ namespace AdventOfCode2019
         {
             if (inputsLoaded)
             {
-                List<int[]> layers = SpaceImageFormat.turnDataIntoLayers(inputs, 25, 6);
-                int verfication = SpaceImageFormat.verifyData(layers);
+                int verfication = image.verifyData();
 
                 Console.WriteLine("Day8: Puzzle 1 Solution - " + verfication);
             }

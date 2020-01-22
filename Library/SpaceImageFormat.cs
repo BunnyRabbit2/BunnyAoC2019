@@ -6,12 +6,23 @@ namespace AdventOfCode2019
 {
     class SpaceImageFormat
     {
-        public static List<int[]> turnDataIntoLayers(int[] data, int width, int height)
-        {
-            List<int[]> layers = new List<int[]>();
+        int width, height;
+        int[] imageData;
+        List<int[]> layers;
 
+        public SpaceImageFormat(int[] data, int wIn, int hIn)
+        {
+            imageData = data;
+            layers = new List<int[]>();
+            width = wIn;
+            height = hIn;
+
+            turnDataIntoLayers();
+        }
+        void turnDataIntoLayers()
+        {
             int pixelsPerLayer = width * height;
-            int noOfLayers = data.Length / pixelsPerLayer;
+            int noOfLayers = imageData.Length / pixelsPerLayer;
 
             for (int i = 0; i < noOfLayers; i++)
             {
@@ -20,16 +31,14 @@ namespace AdventOfCode2019
 
                 for (int j = 0; j < pixelsPerLayer; j++)
                 {
-                    newLayer[j] = data[startIndex + j];
+                    newLayer[j] = imageData[startIndex + j];
                 }
 
                 layers.Add(newLayer);
             }
-
-            return layers;
         }
 
-        public static int verifyData(List<int[]> layers)
+        public int verifyData()
         {
             int[] noOfZeroes = new int[layers.Count];
 
