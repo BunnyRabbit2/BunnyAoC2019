@@ -38,8 +38,7 @@ namespace AdventOfCode2019
                 int[] icP = (int[])intCodeProgram.Clone();
 
                 int[] input = new int[] { 1 };
-                int[] output = IntcodeComputer.runIntcodeProgram(icP, inputsIn: input);
-                int result = output[output.Length-1];
+                int result = IntcodeComputer.runIntcodeProgram(icP, inputsIn: input);
 
                 Console.WriteLine("Day5: Puzzle 1 solution - " + result);
             }
@@ -52,8 +51,7 @@ namespace AdventOfCode2019
                 int[] icP = (int[])intCodeProgram.Clone();
 
                 int[] input = new int[] { 5 };
-                int[] output = IntcodeComputer.runIntcodeProgram(icP, inputsIn: input);
-                int result = output[output.Length-1];
+                int result = IntcodeComputer.runIntcodeProgram(icP, inputsIn: input);
 
                 Console.WriteLine("Day5: Puzzle 2 solution - " + result);
             }
