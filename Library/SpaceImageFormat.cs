@@ -4,11 +4,12 @@ using System.Linq;
 
 namespace AdventOfCode2019
 {
-    class SpaceImageFormat
+    class SpaceImageFormat // Only does black (0) or white (1)
     {
         int width, height;
         int[] imageData;
         List<int[]> layers;
+        int[] colourData;
 
         public SpaceImageFormat(int[] data, int wIn, int hIn)
         {
@@ -16,8 +17,9 @@ namespace AdventOfCode2019
             layers = new List<int[]>();
             width = wIn;
             height = hIn;
-
+            colourData = new int[width*height];
             turnDataIntoLayers();
+            createColourData();
         }
         void turnDataIntoLayers()
         {
@@ -35,6 +37,27 @@ namespace AdventOfCode2019
                 }
 
                 layers.Add(newLayer);
+            }
+        }
+
+        void createColourData()
+        {
+            for(int i = 0; i < colourData.Length; i++)
+            {
+                for(int p = 0; p < layers.Count; p++)
+                {
+                    int pixelCheck = layers[p][i];
+                    if(pixelCheck == 0)
+                    {
+                        colourData[i] = 0;
+                        break;
+                    }
+                    else if(pixelCheck == 1)
+                    {
+                        colourData[i] = 1;
+                        break;
+                    }
+                }
             }
         }
 
@@ -68,6 +91,22 @@ namespace AdventOfCode2019
             }
 
             return noOfOnes * noOfTwos;
+        }
+
+        public void drawImage()
+        {
+            for(int h = 0; h < height; h++)
+            {
+                string line = "";
+                for(int w = 0; w < width; w++)
+                {
+                    if(colourData[h*w+w] == 0)
+                        line += " ";
+                    else if(colourData[h*w+w] == 1)
+                        line += "#";
+                }
+                Console.WriteLine(line);
+            }
         }
     }
 }

@@ -53,7 +53,8 @@ namespace AdventOfCode2019
         {
             if (inputsLoaded)
             {
-                Console.WriteLine("Day8: Puzzle 2 Solution - ");
+                Console.WriteLine("Day8: Puzzle 2 Solution");
+                image.drawImage();
             }
         }
     }
