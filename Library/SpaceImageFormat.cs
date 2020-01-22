@@ -17,10 +17,11 @@ namespace AdventOfCode2019
             layers = new List<int[]>();
             width = wIn;
             height = hIn;
-            colourData = new int[width*height];
+            colourData = new int[width * height];
             turnDataIntoLayers();
             createColourData();
         }
+
         void turnDataIntoLayers()
         {
             int pixelsPerLayer = width * height;
@@ -42,21 +43,16 @@ namespace AdventOfCode2019
 
         void createColourData()
         {
-            for(int i = 0; i < colourData.Length; i++)
+            for (int i = 0; i < width * height; i++)
             {
-                for(int p = 0; p < layers.Count; p++)
+                colourData[i] = layers[0][i]; // copy first layer into colourData
+            }
+            for (int l = 1; l < layers.Count; l++)
+            {
+                for (int p = 0; p < colourData.Length; p++)
                 {
-                    int pixelCheck = layers[p][i];
-                    if(pixelCheck == 0)
-                    {
-                        colourData[i] = 0;
-                        break;
-                    }
-                    else if(pixelCheck == 1)
-                    {
-                        colourData[i] = 1;
-                        break;
-                    }
+                    if (colourData[p] == 2)
+                        colourData[p] = layers[l][p];
                 }
             }
         }
@@ -95,14 +91,14 @@ namespace AdventOfCode2019
 
         public void drawImage()
         {
-            for(int h = 0; h < height; h++)
+            for (int h = 0; h < colourData.Length; h += width)
             {
                 string line = "";
-                for(int w = 0; w < width; w++)
+                for (int w = 0; w < width; w++)
                 {
-                    if(colourData[h*w+w] == 0)
-                        line += " ";
-                    else if(colourData[h*w+w] == 1)
+                    if (colourData[h + w] == 0)
+                        line += "-";
+                    else if (colourData[h + w] == 1)
                         line += "#";
                 }
                 Console.WriteLine(line);
