@@ -81,7 +81,8 @@ namespace AdventOfCode2019
                     // First loop round the amps
                     for (int i = 0; i < ps.Count; i++)
                     {
-                        signal = IntcodeComputer.runIntcodeProgramPausable(amps[i], out ampNextI[i], out terminated[i],
+                        int[] a = amps[i];
+                        signal = IntcodeComputer.runIntcodeProgramPausable(a, out a, out ampNextI[i], out terminated[i],
                                         inputsIn: new int[] { ps[i], signal });
                     }
 
@@ -89,7 +90,8 @@ namespace AdventOfCode2019
                     {
                         for (int i = 0; i < 5; i++)
                         {
-                            signal = IntcodeComputer.runIntcodeProgramPausable(amps[i], out ampNextI[i], out terminated[i],
+                            int[] a = amps[i];
+                            signal = IntcodeComputer.runIntcodeProgramPausable(a, out a, out ampNextI[i], out terminated[i],
                                         inputsIn: new int[] { signal }, restartIndex: ampNextI[i]);
                         }
                     }

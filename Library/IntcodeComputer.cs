@@ -30,17 +30,17 @@ namespace AdventOfCode2019
             bool terminated = false;
             int nextI = 0;
             int result = 0;
-
+            
             while (!terminated)
             {
-                result = IntcodeComputer.runIntcodeProgramPausable(icPIn, out nextI, out terminated, relativeBase: relativeBaseIn,
+                result = IntcodeComputer.runIntcodeProgramPausable(icPIn, out icPIn, out nextI, out terminated, relativeBase: relativeBaseIn,
                                                                     inputsIn: inputs, restartIndex: nextI, resultAddress: resultAddress);
             }
 
             return result;
         }
 
-        public static int runIntcodeProgramPausable(int[] icPIn, out int nextI, out bool programTerminated, int relativeBase = 0,
+        public static int runIntcodeProgramPausable(int[] icPIn, out int[] icPOut, out int nextI, out bool programTerminated, int relativeBase = 0,
                                                     int resultAddress = -1, int[] inputsIn = null, int restartIndex = 0)
         {
             int[] inputs = inputsIn ?? new int[0];
@@ -103,6 +103,8 @@ namespace AdventOfCode2019
                         programTerminated = true;
                     else
                         programTerminated = false;
+
+                    icPOut = icP.ToArray();
                     return output;
                 }
                 int firstValue = 0;
@@ -180,6 +182,7 @@ namespace AdventOfCode2019
             // For intcode programs with no opcode 4
             nextI = -1;
             programTerminated = true;
+            icPOut = icP.ToArray();
             if (resultAddress == -1)
                 return output;
             else
