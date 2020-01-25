@@ -15,7 +15,7 @@ namespace AdventOfCode2019
             d5.solvePuzzle2();
         }
 
-        int[] intCodeProgram;
+        long[] intCodeProgram;
         bool intCodeProgramLoaded;
 
         public Day5()
@@ -35,10 +35,10 @@ namespace AdventOfCode2019
         {
             if (intCodeProgramLoaded)
             {
-                int[] icP = (int[])intCodeProgram.Clone();
+                long[] icP = (long[])intCodeProgram.Clone();
 
-                int[] input = new int[] { 1 };
-                int result = IntcodeComputer.runIntcodeProgram(icP, inputsIn: input);
+                long[] input = new long[] { 1 };
+                long result = IntcodeComputer.runIntcodeProgram(icP, inputsIn: input);
 
                 Console.WriteLine("Day5: Puzzle 1 solution - " + result);
             }
@@ -48,10 +48,10 @@ namespace AdventOfCode2019
         {
             if (intCodeProgramLoaded)
             {
-                int[] icP = (int[])intCodeProgram.Clone();
+                long[] icP = (long[])intCodeProgram.Clone();
 
-                int[] input = new int[] { 5 };
-                int result = IntcodeComputer.runIntcodeProgram(icP, inputsIn: input);
+                long[] input = new long[] { 5 };
+                long result = IntcodeComputer.runIntcodeProgram(icP, inputsIn: input);
 
                 Console.WriteLine("Day5: Puzzle 2 solution - " + result);
             }
