@@ -50,7 +50,7 @@ namespace AdventOfCode2019
             {
                 long[] icP = (long[])intCodeProgram.Clone();
 
-                long[] input = new long[] { 5 };
+                long[] input = new long[] { 2 };
                 long result = IntcodeComputer.runIntcodeProgram(icP, inputsIn: input);
 
                 Console.WriteLine("Day9: Puzzle 2 solution - " + result);
