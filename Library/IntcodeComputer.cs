@@ -7,159 +7,61 @@ namespace AdventOfCode2019
 {
     public class IntcodeComputer
     {
-        public static int[] loadIntCodeProgram(String fileLocation)
+        public static long[] loadIntCodeProgram(String fileLocation)
         {
-            int[] intCodeProgram;
+            long[] IntcodeProgram;
 
             if (File.Exists(fileLocation))
             {
-                intCodeProgram = File.ReadAllText(fileLocation).Split(',').Select(l => int.Parse(l)).ToArray();
+                IntcodeProgram = File.ReadAllText(fileLocation).Split(',').Select(l => long.Parse(l)).ToArray();
 
-                return intCodeProgram;
+                return IntcodeProgram;
             }
             else
             {
                 Console.WriteLine("Intcode Computer: Invalid File Location");
-                return new int[0];
+                return new long[0];
             }
         }
 
-        public static int runIntcodeProgram(int[] icPIn, int resultAddress = -1, int[] inputsIn = null)
+        public static long runIntcodeProgram(long[] icPIn, long resultAddress = -1, long[] inputsIn = null, long relativeBaseIn = 0)
         {
-            int[] inputs = inputsIn ?? new int[0];
-            int output = 0;
-            int currentInput = 0;
+            long[] inputs = inputsIn ?? new long[0];
+            bool terminated = false;
+            long nextI = 0;
+            long result = 0;
 
-            for (int i = 0; i < icPIn.Length; i += 0)
+            while (!terminated)
+            {
+                result = IntcodeComputer.runIntcodeProgramPausable(icPIn, out nextI, out terminated, relativeBase: relativeBaseIn,
+                                                                    inputsIn: inputs, restartIndex: nextI, resultAddress: resultAddress);
+            }
+
+            return result;
+        }
+
+        public static long runIntcodeProgramPausable(long[] icPIn, out long nextI, out bool programTerminated, long relativeBase = 0,
+                                                    long resultAddress = -1, long[] inputsIn = null, long restartIndex = 0)
+        {
+            long[] inputs = inputsIn ?? new long[0];
+            Dictionary<long, long> icPExtra = new Dictionary<long, long>();
+            long currentInput = 0;
+            long output = 0;
+
+            for (long i = restartIndex; i < icPIn.Length; i += 0)
             {
                 if (icPIn[i] == 99) // Exit opcode
                     break;
 
-                int opcode = icPIn[i] % 10; // Gets the final two digits no matter what else is there
+                long opcode = icPIn[i] % 10; // Gets the final two digits no matter what else is there
 
-                int firstMode = (icPIn[i] / 100) % 10;
-                int secondMode = (icPIn[i] / 1000) % 10;
-                int thirdMode = (icPIn[i] / 10000) % 10;
+                long firstMode = (icPIn[i] / 100) % 10;
+                long secondMode = (icPIn[i] / 1000) % 10;
+                long thirdMode = (icPIn[i] / 10000) % 10;
 
-                int firstParam = icPIn[i + 1];
-                int secondParam = icPIn[i + 2];
-                int thirdParam = icPIn[i + 3];
-
-                if (opcode == 3) // Input opcode
-                {
-                    if (currentInput < inputs.Length)
-                    {
-                        icPIn[firstParam] = inputs[currentInput];
-                        currentInput++;
-                        i += 2;
-                    }
-                    else
-                    {
-                        Console.WriteLine("IntcodeComputer error. Program asked for input not provided");
-                        Console.WriteLine(">>> Number input being asked for: " + currentInput);
-                        Console.WriteLine(">>> Length of input array: " + inputs.Length);
-                        break;
-                    }
-                    continue;
-                }
-                else if (opcode == 4) // Output opcode
-                {
-                    if (firstMode == 1)
-                    {
-                        output = firstParam;
-                    }
-                    else
-                    {
-                        output = icPIn[firstParam];
-                    }
-                    i += 2;
-
-                    continue;
-                }
-                int firstValue = (firstMode == 1) ? firstParam : icPIn[firstParam];
-                int secondValue = (secondMode == 1) ? secondParam : icPIn[secondParam];
-
-                if (opcode == 1) // addition opcode
-                {
-                    icPIn[thirdParam] = firstValue + secondValue;
-                    i += 4;
-                    continue;
-                }
-                else if (opcode == 2) // multiplication opcode
-                {
-                    icPIn[thirdParam] = firstValue * secondValue;
-                    i += 4;
-                    continue;
-                }
-                else if (opcode == 5)
-                {
-                    if (firstValue != 0)
-                        i = secondValue;
-                    else
-                        i += 3;
-                    continue;
-                }
-                else if (opcode == 6)
-                {
-                    if (firstValue == 0)
-                        i = secondValue;
-                    else
-                        i += 3;
-                    continue;
-                }
-                else if (opcode == 7)
-                {
-                    if (firstValue < secondValue)
-                        icPIn[thirdParam] = 1;
-                    else
-                        icPIn[thirdParam] = 0;
-
-                    i += 4;
-                    continue;
-                }
-                else if (opcode == 8)
-                {
-                    if (firstValue == secondValue)
-                        icPIn[thirdParam] = 1;
-                    else
-                        icPIn[thirdParam] = 0;
-
-                    i += 4;
-                    continue;
-                }
-                else
-                {
-                    Console.WriteLine("IntcodeComputer error. Program opcode not recognised - " + opcode);
-                    break; // Forgot this before. Caused an infinite loop and locked shit up. Nice.
-                }
-            }
-
-            if (resultAddress == -1)
-                return output;
-            else
-                return icPIn[resultAddress];
-        }
-
-        public static int runIntcodeProgramPausable(int[] icPIn, out int nextI, out bool programTerminated, int resultAddress = -1, int[] inputsIn = null, int restartIndex = 0)
-        {
-            int[] inputs = inputsIn ?? new int[0];
-            int currentInput = 0;
-            int output = 0;
-
-            for (int i = restartIndex; i < icPIn.Length; i += 0)
-            {
-                if (icPIn[i] == 99) // Exit opcode
-                    break;
-
-                int opcode = icPIn[i] % 10; // Gets the final two digits no matter what else is there
-
-                int firstMode = (icPIn[i] / 100) % 10;
-                int secondMode = (icPIn[i] / 1000) % 10;
-                int thirdMode = (icPIn[i] / 10000) % 10;
-
-                int firstParam = 0;
-                int secondParam = 0;
-                int thirdParam = 0;
+                long firstParam = 0;
+                long secondParam = 0;
+                long thirdParam = 0;
 
                 if (i + 1 < icPIn.Length - 1)
                     firstParam = icPIn[i + 1];
@@ -172,7 +74,14 @@ namespace AdventOfCode2019
                 {
                     if (currentInput < inputs.Length)
                     {
-                        icPIn[firstParam] = inputs[currentInput];
+                        if(firstMode == 2)
+                        {
+                            setValueToAddress(firstParam + relativeBase, inputs[currentInput], icPIn, icPExtra);
+                        }
+                        else
+                        {
+                            setValueToAddress(firstParam, inputs[currentInput], icPIn, icPExtra);
+                        }
                         currentInput++;
                         i += 2;
                     }
@@ -191,30 +100,54 @@ namespace AdventOfCode2019
                     {
                         output = firstParam;
                     }
+                    else if(firstMode == 2)
+                    {
+                        output = getValueFromAddress(firstParam + relativeBase, icPIn, icPExtra);
+                    }
                     else
                     {
-                        output = icPIn[firstParam];
+                        output = getValueFromAddress(firstParam, icPIn, icPExtra);
                     }
 
                     nextI = i + 2;
-                    if (icPIn[i + 2] == 99)
+                    if (secondParam == 99)
                         programTerminated = true;
                     else
                         programTerminated = false;
+
                     return output;
                 }
-                int firstValue = (firstMode == 1) ? firstParam : icPIn[firstParam];
-                int secondValue = (secondMode == 1) ? secondParam : icPIn[secondParam];
+                long firstValue = 0;
+                if (firstMode == 1)
+                    firstValue = firstParam;
+                else if (firstMode == 2)
+                    firstValue = getValueFromAddress(firstParam + relativeBase, icPIn, icPExtra);
+                else
+                    firstValue = getValueFromAddress(firstParam, icPIn, icPExtra);
+
+                long secondValue = 0;
+                if (secondMode == 1)
+                    secondValue = secondParam;
+                else if (secondMode == 2)
+                    secondValue = getValueFromAddress(secondParam + relativeBase, icPIn, icPExtra);
+                else
+                    secondValue = getValueFromAddress(secondParam, icPIn, icPExtra);
+
+                long thirdValue = 0;
+                if(thirdMode == 2)
+                    thirdValue = thirdParam + relativeBase;
+                else
+                    thirdValue = thirdParam;
 
                 if (opcode == 1) // addition opcode
                 {
-                    icPIn[thirdParam] = firstValue + secondValue;
+                    setValueToAddress(thirdValue, firstValue + secondValue, icPIn, icPExtra);
                     i += 4;
                     continue;
                 }
                 else if (opcode == 2) // multiplication opcode
                 {
-                    icPIn[thirdParam] = firstValue * secondValue;
+                    setValueToAddress(thirdValue, firstValue * secondValue, icPIn, icPExtra);
                     i += 4;
                     continue;
                 }
@@ -237,9 +170,9 @@ namespace AdventOfCode2019
                 else if (opcode == 7)
                 {
                     if (firstValue < secondValue)
-                        icPIn[thirdParam] = 1;
+                        setValueToAddress(thirdValue, 1, icPIn, icPExtra);
                     else
-                        icPIn[thirdParam] = 0;
+                        setValueToAddress(thirdValue, 0, icPIn, icPExtra);
 
                     i += 4;
                     continue;
@@ -247,11 +180,18 @@ namespace AdventOfCode2019
                 else if (opcode == 8)
                 {
                     if (firstValue == secondValue)
-                        icPIn[thirdParam] = 1;
+                        setValueToAddress(thirdValue, 1, icPIn, icPExtra);
                     else
-                        icPIn[thirdParam] = 0;
+                        setValueToAddress(thirdValue, 0, icPIn, icPExtra);
 
                     i += 4;
+                    continue;
+                }
+                else if (opcode == 9)
+                {
+                    relativeBase += firstValue;
+
+                    i += 2;
                     continue;
                 }
                 else
@@ -261,10 +201,56 @@ namespace AdventOfCode2019
                 }
             }
 
-            // Likely never hitting this point but just in case
+            // For Intcode programs with no opcode 4
             nextI = -1;
             programTerminated = true;
-            return output;
+            if (resultAddress == -1)
+                return output;
+            else
+                return getValueFromAddress(resultAddress, icPIn, icPExtra);
+        }
+
+        static void setValueToAddress(long address, long value, long[] icPIn, Dictionary<long, long> icPEIn)
+        {
+            if (address >= icPIn.Length)
+            {
+                long newAdd = address - icPIn.Length;
+                if(icPEIn.ContainsKey(newAdd))
+                {
+                    icPEIn[newAdd] = value;
+                }
+                else
+                {
+                    icPEIn.Add(newAdd, value);
+                }
+            }
+            else
+            {
+                icPIn[address] = value;
+            }
+        }
+
+        static long getValueFromAddress(long address, long[] icPIn, Dictionary<long, long> icPEIn)
+        {
+            if (address >= icPIn.Length)
+            {
+                long newAdd = address - icPIn.Length;
+                long output = 0;
+                if (icPEIn.ContainsKey(newAdd))
+                {
+                    output = icPEIn[newAdd];
+                }
+                else
+                {
+                    icPEIn.Add(newAdd, 0);
+                    output = 0;
+                }
+                return output;
+            }
+            else
+            {
+                return icPIn[address];
+            }
         }
     }
 }

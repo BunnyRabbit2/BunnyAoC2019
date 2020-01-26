@@ -15,7 +15,7 @@ namespace AdventOfCode2019
             d7.solvePuzzle2();
         }
 
-        int[] intCodeProgram;
+        long[] intCodeProgram;
         bool intCodeProgramLoaded;
 
         public Day7()
@@ -37,16 +37,16 @@ namespace AdventOfCode2019
             {
                 List<List<int>> phaseSettings = AOCHelpers.GeneratePermutations(new List<int>() { 0, 1, 2, 3, 4 });
 
-                int maxSignal = 0;
+                long maxSignal = 0;
 
                 // Run each permutation of the phase settings through the amps to find the highest output
                 foreach (List<int> ps in phaseSettings)
                 {
-                    int signal = 0;
+                    long signal = 0;
 
                     for (int i = 0; i < ps.Count; i++)
                     {
-                        int output = IntcodeComputer.runIntcodeProgram((int[])intCodeProgram.Clone(), inputsIn: new int[] { ps[i], signal });
+                        long output = IntcodeComputer.runIntcodeProgram((long[])intCodeProgram.Clone(), inputsIn: new long[] { ps[i], signal });
                         signal = output;
                     }
 
@@ -64,25 +64,25 @@ namespace AdventOfCode2019
             {
                 List<List<int>> phaseSettings = AOCHelpers.GeneratePermutations(new List<int>() { 5, 6, 7, 8, 9 });
 
-                int maxSignal = 0;
+                long maxSignal = 0;
 
                 // Run each permutation of the phase settings through the amps to find the highest output
                 foreach (List<int> ps in phaseSettings)
                 {
-                    int signal = 0;
-                    List<int[]> amps = new List<int[]>();
+                    long signal = 0;
+                    List<long[]> amps = new List<long[]>();
                     for (int i = 0; i < 5; i++)
                     {
-                        amps.Add((int[])intCodeProgram.Clone());
+                        amps.Add((long[])intCodeProgram.Clone());
                     }
-                    int[] ampNextI = new int[5];
+                    long[] ampNextI = new long[5];
                     bool[] terminated = new bool[5];
 
                     // First loop round the amps
                     for (int i = 0; i < ps.Count; i++)
                     {
                         signal = IntcodeComputer.runIntcodeProgramPausable(amps[i], out ampNextI[i], out terminated[i],
-                                        inputsIn: new int[] { ps[i], signal });
+                                        inputsIn: new long[] { ps[i], signal });
                     }
 
                     while (!terminated[4])
@@ -90,7 +90,7 @@ namespace AdventOfCode2019
                         for (int i = 0; i < 5; i++)
                         {
                             signal = IntcodeComputer.runIntcodeProgramPausable(amps[i], out ampNextI[i], out terminated[i],
-                                        inputsIn: new int[] { signal }, restartIndex: ampNextI[i]);
+                                        inputsIn: new long[] { signal }, restartIndex: ampNextI[i]);
                         }
                     }
 

@@ -5,20 +5,20 @@ using System.Linq;
 
 namespace AdventOfCode2019
 {
-    public class Day5
+    public class Day9
     {
-        public static void solveDay5()
+        public static void solveDay9()
         {
-            Day5 d5 = new Day5();
-            d5.loadIntCodeProgram("inputs/day5.txt");
-            d5.solvePuzzle1();
-            d5.solvePuzzle2();
+            Day9 d9 = new Day9();
+            d9.loadIntCodeProgram("inputs/day9.txt");
+            d9.solvePuzzle1();
+            d9.solvePuzzle2();
         }
 
         long[] intCodeProgram;
         bool intCodeProgramLoaded;
 
-        public Day5()
+        public Day9()
         {
             intCodeProgramLoaded = false;
         }
@@ -40,7 +40,7 @@ namespace AdventOfCode2019
                 long[] input = new long[] { 1 };
                 long result = IntcodeComputer.runIntcodeProgram(icP, inputsIn: input);
 
-                Console.WriteLine("Day5: Puzzle 1 solution - " + result);
+                Console.WriteLine("Day9: Puzzle 1 solution - " + result);
             }
         }
 
@@ -50,10 +50,10 @@ namespace AdventOfCode2019
             {
                 long[] icP = (long[])intCodeProgram.Clone();
 
-                long[] input = new long[] { 5 };
+                long[] input = new long[] { 2 };
                 long result = IntcodeComputer.runIntcodeProgram(icP, inputsIn: input);
 
-                Console.WriteLine("Day5: Puzzle 2 solution - " + result);
+                Console.WriteLine("Day9: Puzzle 2 solution - " + result);
             }
         }
     }

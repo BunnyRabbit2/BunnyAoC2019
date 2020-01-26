@@ -15,7 +15,7 @@ namespace AdventOfCode2019
             d2.solvePuzzle2();
         }
 
-        int[] intCodeProgram;
+        long[] intCodeProgram;
         bool intCodeProgramLoaded;
 
         public Day2()
@@ -35,13 +35,13 @@ namespace AdventOfCode2019
         {
             if (intCodeProgramLoaded)
             {
-                int[] icP = (int[])intCodeProgram.Clone();
+                long[] icP = (long[])intCodeProgram.Clone();
 
                 // Pre running operations
                 icP[1] = 12;
                 icP[2] = 2;
 
-                int result = IntcodeComputer.runIntcodeProgram(icP, 0);
+                long result = IntcodeComputer.runIntcodeProgram(icP, 0);
 
                 Console.WriteLine("Day2: Puzzle 1 solution - " + result);
             }
@@ -52,7 +52,7 @@ namespace AdventOfCode2019
             if (intCodeProgramLoaded)
             {
                 // Shame I have to brute force this motherfucker
-                int wantedResult = 19690720;
+                long wantedResult = 19690720;
                 int noun = 0;
                 int verb = 0;
 
@@ -60,12 +60,12 @@ namespace AdventOfCode2019
                 {
                     for(int v = 0; v < 99; v++)
                     {
-                        int[] icP = (int[])intCodeProgram.Clone();
+                        long[] icP = (long[])intCodeProgram.Clone();
 
                         icP[1] = n;
                         icP[2] = v;
 
-                        int test = IntcodeComputer.runIntcodeProgram(icP, 0);
+                        long test = IntcodeComputer.runIntcodeProgram(icP, 0);
 
                         if(test == wantedResult)
                         {
