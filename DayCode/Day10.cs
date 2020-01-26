@@ -16,7 +16,7 @@ namespace AdventOfCode2019
             d10.solvePuzzle2();
         }
 
-        bool[][] asteroidInPlace;
+        int[][] asteroidInPlace;
         List<Asteroid> asteroids;
         bool inputsLoaded;
 
@@ -35,22 +35,27 @@ namespace AdventOfCode2019
                 int height = lines.Length;
                 int width = lines[0].Length;
 
-                asteroidInPlace = new bool[width][];
-                for(int i = 0; i < width; i++)
+                asteroidInPlace = new int[width][];
+                for (int i = 0; i < width; i++)
                 {
-                    asteroidInPlace[i] = new bool[height];
+                    asteroidInPlace[i] = new int[height];
+                    for(int j = 0; j < asteroidInPlace[i].Length; j++)
+                    {
+                        asteroidInPlace[i][j] = -1;
+                    }
                 }
 
-                for(int y = 0; y < height; y++)
+                for (int y = 0; y < height; y++)
                 {
-                    for(int x = 0; x < width; x++)
+                    for (int x = 0; x < width; x++)
                     {
                         char c = lines[y][x];
 
-                        if(c == '#')
+                        if (c == '#')
                         {
-                            asteroids.Add(new Asteroid(x,y));
-                            asteroidInPlace[x][y] = true;
+                            Asteroid newA = new Asteroid(x,y);
+                            asteroids.Add(newA);
+                            asteroidInPlace[x][y] = newA.id;
                         }
                     }
                 }
@@ -67,7 +72,58 @@ namespace AdventOfCode2019
         {
             if (inputsLoaded)
             {
-                Console.WriteLine("Day10: Puzzle 1 solution - " + 0);
+                Asteroid bestPlacement = new Asteroid(-1,-1);
+
+                for(int i = 0; i < asteroids.Count; i++)
+                {
+                    Asteroid a = asteroids[i];
+                    List<int> blockedAsteroids = new List<int>();
+
+                    foreach (Asteroid b in asteroids)
+                    {
+                        if (b.id != a.id)
+                        {
+                            int dx = Math.Max(a.X, b.X) - Math.Min(a.X, b.X);
+                            int dy = Math.Max(a.Y, b.Y) - Math.Min(a.Y, b.Y);
+
+                            int gcd = AOCHelpers.GCD(dx, dy);
+                            if (gcd != 0)
+                            {
+                                dx /= gcd;
+                                dy /= gcd;
+                            }
+
+                            int x = b.X;
+                            int y = b.Y;
+
+                            while(x > 0 && x < asteroidInPlace.Length && y > 0 && y < asteroidInPlace[0].Length)
+                            {
+                                x += dx;
+                                y += dy;
+
+                                if(x < 0 || x >= asteroidInPlace.Length || y < 0 || y >= asteroidInPlace[0].Length)
+                                    break;
+
+                                if(asteroidInPlace[x][y] != -1)
+                                {
+                                    if(!blockedAsteroids.Contains(asteroidInPlace[x][y]))
+                                        blockedAsteroids.Add(asteroidInPlace[x][y]);
+                                }
+                            }
+                        }
+                    }
+
+                    asteroids[i].asteroidsInSight = asteroids.Count - blockedAsteroids.Count;
+                }
+
+                for(int i = 0; i < asteroids.Count; i++)
+                {
+                    if(asteroids[i].asteroidsInSight > bestPlacement.asteroidsInSight)
+                        bestPlacement = asteroids[i];
+                }
+
+                int result = bestPlacement.asteroidsInSight;
+                Console.WriteLine("Day10: Puzzle 1 solution - " + result);
             }
         }
 

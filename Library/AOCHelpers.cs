@@ -59,5 +59,12 @@ namespace AdventOfCode2019
                 }
             }
         }
+
+        // Code from http://www.rosettacode.org/wiki/Greatest_common_divisor#C.23
+        public static int GCD(int a, int b)
+        {
+            while (b != 0) b = a % (a = b);
+            return a;
+        }
     }
 }

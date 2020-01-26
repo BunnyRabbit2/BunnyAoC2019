@@ -1,15 +1,20 @@
 using System;
 
-struct Asteroid
+class Asteroid
 {
     public int X { get; }
     public int Y { get; }
-    public bool blocked;
+    public int asteroidsInSight;
+    public int id { get; }
 
     public Asteroid(int xIn, int yIn)
     {
         X = xIn;
         Y = yIn;
-        blocked = false;
+        asteroidsInSight = 0;
+        id = AsteroidId;
+        AsteroidId++;
     }
+
+    public static int AsteroidId = 0;
 }
