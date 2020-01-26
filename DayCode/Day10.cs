@@ -22,7 +22,7 @@ namespace AdventOfCode2019
 
         public Day10()
         {
-            oTree = new OrbitTree();
+            asteroids = new List<Asteroid>();
             inputsLoaded = false;
         }
 
@@ -31,6 +31,29 @@ namespace AdventOfCode2019
             if (File.Exists(fileLocation))
             {
                 string[] lines = File.ReadAllText(fileLocation).Split(Environment.NewLine);
+
+                int height = lines.Length;
+                int width = lines[0].Length;
+
+                asteroidInPlace = new bool[width][];
+                for(int i = 0; i < width; i++)
+                {
+                    asteroidInPlace[i] = new bool[height];
+                }
+
+                for(int y = 0; y < height; y++)
+                {
+                    for(int x = 0; x < width; x++)
+                    {
+                        char c = lines[y][x];
+
+                        if(c == '#')
+                        {
+                            asteroids.Add(new Asteroid(x,y));
+                            asteroidInPlace[x][y] = true;
+                        }
+                    }
+                }
 
                 inputsLoaded = true;
             }
