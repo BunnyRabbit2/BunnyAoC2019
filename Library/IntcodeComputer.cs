@@ -44,7 +44,7 @@ namespace AdventOfCode2019
                                                     long resultAddress = -1, long[] inputsIn = null, long restartIndex = 0)
         {
             long[] inputs = inputsIn ?? new long[0];
-            List<long> icPExtra = new List<long>();
+            Dictionary<long, long> icPExtra = new Dictionary<long, long>();
             long currentInput = 0;
             long output = 0;
 
@@ -74,7 +74,7 @@ namespace AdventOfCode2019
                 {
                     if (currentInput < inputs.Length)
                     {
-                        icPIn[firstParam] = inputs[currentInput];
+                        setValueToAddress(firstParam, inputs[currentInput], icPIn, icPExtra);
                         currentInput++;
                         i += 2;
                     }
@@ -95,7 +95,7 @@ namespace AdventOfCode2019
                     }
                     else
                     {
-                        output = icPIn[firstParam];
+                        output = getValueFromAddress(firstParam, icPIn, icPExtra);
                     }
 
                     nextI = i + 2;
@@ -108,23 +108,23 @@ namespace AdventOfCode2019
                 }
                 long firstValue = 0;
                 if(firstMode == 1) firstValue = firstParam;
-                else if(firstMode == 2) firstValue = icPIn[firstParam + relativeBase];
-                else firstValue = icPIn[firstParam];
+                else if(firstMode == 2) firstValue = getValueFromAddress(firstParam + relativeBase, icPIn, icPExtra);
+                else firstValue = getValueFromAddress(firstParam, icPIn, icPExtra);
 
                 long secondValue = 0;
                 if(secondMode == 1) secondValue = secondParam;
-                else if(secondMode == 2) secondValue = icPIn[secondParam + relativeBase];
-                else secondValue = icPIn[secondParam];
+                else if(secondMode == 2) secondValue = getValueFromAddress(secondParam + relativeBase, icPIn, icPExtra);
+                else secondValue = getValueFromAddress(secondParam, icPIn, icPExtra);
 
                 if (opcode == 1) // addition opcode
                 {
-                    icPIn[thirdParam] = firstValue + secondValue;
+                    setValueToAddress(thirdParam, firstValue + secondValue, icPIn, icPExtra);
                     i += 4;
                     continue;
                 }
                 else if (opcode == 2) // multiplication opcode
                 {
-                    icPIn[thirdParam] = firstValue * secondValue;
+                    setValueToAddress(thirdParam, firstValue * secondValue, icPIn, icPExtra);
                     i += 4;
                     continue;
                 }
@@ -147,9 +147,9 @@ namespace AdventOfCode2019
                 else if (opcode == 7)
                 {
                     if (firstValue < secondValue)
-                        icPIn[thirdParam] = 1;
+                        setValueToAddress(thirdParam, 1, icPIn, icPExtra);
                     else
-                        icPIn[thirdParam] = 0;
+                        setValueToAddress(thirdParam, 0, icPIn, icPExtra);
 
                     i += 4;
                     continue;
@@ -157,9 +157,9 @@ namespace AdventOfCode2019
                 else if (opcode == 8)
                 {
                     if (firstValue == secondValue)
-                        icPIn[thirdParam] = 1;
+                        setValueToAddress(thirdParam, 1, icPIn, icPExtra);
                     else
-                        icPIn[thirdParam] = 0;
+                        setValueToAddress(thirdParam, 0, icPIn, icPExtra);
 
                     i += 4;
                     continue;
@@ -184,12 +184,42 @@ namespace AdventOfCode2019
             if (resultAddress == -1)
                 return output;
             else
-                return icPIn[resultAddress];
+                return getValueFromAddress(resultAddress, icPIn, icPExtra);
         }
 
-        void addValueToAddress(long address, long value, long[] icPIn)
+        static void setValueToAddress(long address, long value, long[] icPIn, Dictionary<long,long> icPEIn)
         {
-            
+            if(address > icPIn.Length)
+            {
+                long newAdd = address - icPIn.Length;
+                icPEIn.Add(newAdd, value);
+            }
+            else
+            {
+                icPIn[address] = value;
+            }
+        }
+
+        static long getValueFromAddress(long address, long[] icPIn, Dictionary<long,long> icPEIn)
+        {
+            if(address >= icPIn.Length)
+            {
+                long newAdd = address - icPIn.Length;
+                long output = 0;
+                if(icPEIn.ContainsKey(address))
+                {
+                    output = icPEIn[address];
+                }
+                else
+                {
+                    output = 0;
+                }
+                return 0;
+            }
+            else
+            {
+                return icPIn[address];
+            }
         }
     }
 }
