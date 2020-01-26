@@ -7,42 +7,80 @@ namespace AdventOfCode2019
 {
     public class IntcodeComputer
     {
-        public static long[] loadIntCodeProgram(String fileLocation)
-        {
-            long[] IntcodeProgram;
+        long[] inputs;
+        bool terminated, programLoaded;
+        long nextI;
+        long result;
+        long relativeBase;
+        long[] intcodeProgram;
 
+        public IntcodeComputer()
+        {
+            setDefaults();
+        }
+
+        public IntcodeComputer(string fileLocation)
+        {
+            setDefaults();
+            loadIntCodeProgram(fileLocation);
+        }
+
+        void setDefaults()
+        {
+            terminated = false;
+            programLoaded = false;
+            nextI = 0;
+            result = 0;
+            relativeBase = 0;
+        }
+
+        public long[] getIntcodeProgram()
+        {
+            return intcodeProgram;
+        }
+
+        public void loadIntCodeProgram(String fileLocation)
+        {
             if (File.Exists(fileLocation))
             {
-                IntcodeProgram = File.ReadAllText(fileLocation).Split(',').Select(l => long.Parse(l)).ToArray();
-
-                return IntcodeProgram;
+                intcodeProgram = File.ReadAllText(fileLocation).Split(',').Select(l => long.Parse(l)).ToArray();
+                programLoaded = true;
             }
             else
             {
                 Console.WriteLine("Intcode Computer: Invalid File Location");
-                return new long[0];
             }
         }
 
-        public static long runIntcodeProgram(long[] icPIn, long resultAddress = -1, long[] inputsIn = null, long relativeBaseIn = 0)
+        public long runIntcodeProgram(long resultAddress = -1, long[] inputsIn = null)
         {
             long[] inputs = inputsIn ?? new long[0];
-            bool terminated = false;
-            long nextI = 0;
-            long result = 0;
+            // Reset variables before running program
+            nextI = 0;
+            result = 0;
+            relativeBase = 0;
+            terminated = false;
+
+            long[] icP = (long[])intcodeProgram.Clone();
 
             while (!terminated)
             {
-                result = IntcodeComputer.runIntcodeProgramPausable(icPIn, out nextI, out terminated, relativeBase: relativeBaseIn,
-                                                                    inputsIn: inputs, restartIndex: nextI, resultAddress: resultAddress);
+                result = runIntcodeProgramPausable(icP, out nextI, out terminated, inputsIn: inputs, restartIndex: nextI, resultAddress: resultAddress);
             }
 
             return result;
         }
 
-        public static long runIntcodeProgramPausable(long[] icPIn, out long nextI, out bool programTerminated, long relativeBase = 0,
+        public long runIntcodeProgramPausable(long[] icPIn, out long nextI, out bool programTerminated,
                                                     long resultAddress = -1, long[] inputsIn = null, long restartIndex = 0)
         {
+            if (!programLoaded)
+            {
+                nextI = -1;
+                programTerminated = true;
+                return -1; // Program isn't loaded
+            }
+
             long[] inputs = inputsIn ?? new long[0];
             Dictionary<long, long> icPExtra = new Dictionary<long, long>();
             long currentInput = 0;
@@ -74,7 +112,7 @@ namespace AdventOfCode2019
                 {
                     if (currentInput < inputs.Length)
                     {
-                        if(firstMode == 2)
+                        if (firstMode == 2)
                         {
                             setValueToAddress(firstParam + relativeBase, inputs[currentInput], icPIn, icPExtra);
                         }
@@ -100,7 +138,7 @@ namespace AdventOfCode2019
                     {
                         output = firstParam;
                     }
-                    else if(firstMode == 2)
+                    else if (firstMode == 2)
                     {
                         output = getValueFromAddress(firstParam + relativeBase, icPIn, icPExtra);
                     }
@@ -134,7 +172,7 @@ namespace AdventOfCode2019
                     secondValue = getValueFromAddress(secondParam, icPIn, icPExtra);
 
                 long thirdValue = 0;
-                if(thirdMode == 2)
+                if (thirdMode == 2)
                     thirdValue = thirdParam + relativeBase;
                 else
                     thirdValue = thirdParam;
@@ -210,12 +248,12 @@ namespace AdventOfCode2019
                 return getValueFromAddress(resultAddress, icPIn, icPExtra);
         }
 
-        static void setValueToAddress(long address, long value, long[] icPIn, Dictionary<long, long> icPEIn)
+        void setValueToAddress(long address, long value, long[] icPIn, Dictionary<long, long> icPEIn)
         {
             if (address >= icPIn.Length)
             {
                 long newAdd = address - icPIn.Length;
-                if(icPEIn.ContainsKey(newAdd))
+                if (icPEIn.ContainsKey(newAdd))
                 {
                     icPEIn[newAdd] = value;
                 }
@@ -230,7 +268,19 @@ namespace AdventOfCode2019
             }
         }
 
-        static long getValueFromAddress(long address, long[] icPIn, Dictionary<long, long> icPEIn)
+        public void setValueToAddress(long address, long value)
+        {
+            if (address < intcodeProgram.Length)
+            {
+                intcodeProgram[address] = value;
+            }
+            else
+            {
+                Console.WriteLine("Invalid address to set value");
+            }
+        }
+
+        long getValueFromAddress(long address, long[] icPIn, Dictionary<long, long> icPEIn)
         {
             if (address >= icPIn.Length)
             {

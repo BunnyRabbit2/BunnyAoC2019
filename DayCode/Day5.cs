@@ -10,51 +10,34 @@ namespace AdventOfCode2019
         public static void solveDay5()
         {
             Day5 d5 = new Day5();
-            d5.loadIntCodeProgram("inputs/day5.txt");
             d5.solvePuzzle1();
             d5.solvePuzzle2();
         }
 
-        long[] intCodeProgram;
-        bool intCodeProgramLoaded;
+        string programLoc;
+        IntcodeComputer icP;
 
         public Day5()
         {
-            intCodeProgramLoaded = false;
-        }
-
-        public void loadIntCodeProgram(string fileLocation)
-        {
-            intCodeProgram = IntcodeComputer.loadIntCodeProgram(fileLocation);
-
-            if (intCodeProgram.Length > 0)
-                intCodeProgramLoaded = true;
+            programLoc = "inputs/day5.txt";
         }
 
         public void solvePuzzle1()
         {
-            if (intCodeProgramLoaded)
-            {
-                long[] icP = (long[])intCodeProgram.Clone();
+            icP = new IntcodeComputer(programLoc);
+            long[] input = new long[] { 1 };
+            long result = icP.runIntcodeProgram(inputsIn: input);
 
-                long[] input = new long[] { 1 };
-                long result = IntcodeComputer.runIntcodeProgram(icP, inputsIn: input);
-
-                Console.WriteLine("Day5: Puzzle 1 solution - " + result);
-            }
+            Console.WriteLine("Day5: Puzzle 1 solution - " + result);
         }
 
         public void solvePuzzle2()
         {
-            if (intCodeProgramLoaded)
-            {
-                long[] icP = (long[])intCodeProgram.Clone();
+            icP = new IntcodeComputer(programLoc);
+            long[] input = new long[] { 5 };
+            long result = icP.runIntcodeProgram(inputsIn: input);
 
-                long[] input = new long[] { 5 };
-                long result = IntcodeComputer.runIntcodeProgram(icP, inputsIn: input);
-
-                Console.WriteLine("Day5: Puzzle 2 solution - " + result);
-            }
+            Console.WriteLine("Day5: Puzzle 2 solution - " + result);
         }
     }
 }
