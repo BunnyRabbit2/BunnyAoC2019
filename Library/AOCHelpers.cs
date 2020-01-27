@@ -66,5 +66,48 @@ namespace AdventOfCode2019
             while (b != 0) b = a % (a = b);
             return a;
         }
+
+        public static float GetBearingBetweenTwoPoints(float x1, float y1, float x2, float y2, bool returnDegrees = true)
+        {
+            double a, o;
+
+            if (y1 < y2)
+                a = y2 - y1;
+            else
+                a = y1 - y2;
+
+            if (x1 < x2)
+                o = x2 - x1;
+            else
+                o = x1 - x2;
+
+            float theta = (float)Math.Atan(o / a);
+
+            theta = theta * (180.0f / 3.142f);
+
+            if (y1 < y2)
+            {
+                // south of player
+                if (x1 > x2)
+                    // east of player
+                    theta = 180.0f + theta;
+                else
+                    // west of player
+                    theta = 180.0f - theta;
+            }
+            else
+            {
+                // north of player
+                if (x1 > x2)
+                {
+                    theta = 360.0f - theta;
+                }
+            }
+
+            if (returnDegrees)
+                return theta;
+            else
+                return theta * (3.142f / 180.0f);
+        }
     }
 }

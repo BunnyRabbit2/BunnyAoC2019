@@ -72,48 +72,29 @@ namespace AdventOfCode2019
         {
             if (inputsLoaded)
             {
-                Asteroid bestPlacement = new Asteroid(-1,-1);
+                Asteroid bestPlacement = new Asteroid();
 
                 for(int i = 0; i < asteroids.Count; i++)
                 {
                     Asteroid a = asteroids[i];
-                    List<int> blockedAsteroids = new List<int>();
+                    int count = 0;
+                    List<float> angles = new List<float>();
 
                     foreach (Asteroid b in asteroids)
                     {
                         if (b.id != a.id)
                         {
-                            int dx = Math.Max(a.X, b.X) - Math.Min(a.X, b.X);
-                            int dy = Math.Max(a.Y, b.Y) - Math.Min(a.Y, b.Y);
+                            float angle = AOCHelpers.GetBearingBetweenTwoPoints(a.X, a.Y, b.X, b.Y);
 
-                            int gcd = AOCHelpers.GCD(dx, dy);
-                            if (gcd != 0)
+                            if(!angles.Contains(angle))
                             {
-                                dx /= gcd;
-                                dy /= gcd;
-                            }
-
-                            int x = b.X;
-                            int y = b.Y;
-
-                            while(x > 0 && x < asteroidInPlace.Length && y > 0 && y < asteroidInPlace[0].Length)
-                            {
-                                x += dx;
-                                y += dy;
-
-                                if(x < 0 || x >= asteroidInPlace.Length || y < 0 || y >= asteroidInPlace[0].Length)
-                                    break;
-
-                                if(asteroidInPlace[x][y] != -1)
-                                {
-                                    if(!blockedAsteroids.Contains(asteroidInPlace[x][y]))
-                                        blockedAsteroids.Add(asteroidInPlace[x][y]);
-                                }
+                                angles.Add(angle);
+                                count++;
                             }
                         }
                     }
 
-                    asteroids[i].asteroidsInSight = asteroids.Count - blockedAsteroids.Count;
+                    asteroids[i].asteroidsInSight = count;
                 }
 
                 for(int i = 0; i < asteroids.Count; i++)

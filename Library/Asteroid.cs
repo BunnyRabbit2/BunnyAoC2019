@@ -7,6 +7,15 @@ class Asteroid
     public int asteroidsInSight;
     public int id { get; }
 
+    public Asteroid()
+    {
+        X = -1;
+        Y = -1;
+        asteroidsInSight = 0;
+        id = AsteroidId;
+        AsteroidId++;
+    }
+
     public Asteroid(int xIn, int yIn)
     {
         X = xIn;
