@@ -60,11 +60,9 @@ namespace AdventOfCode2019
             }
         }
 
-        // Code from http://www.rosettacode.org/wiki/Greatest_common_divisor#C.23
-        public static int GCD(int a, int b)
+        public static float GetDistanceBetweenTwoPoints(float x1, float y1, float x2, float y2)
         {
-            while (b != 0) b = a % (a = b);
-            return a;
+            return (float)Math.Sqrt(Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2));
         }
 
         public static float GetBearingBetweenTwoPoints(float x1, float y1, float x2, float y2, bool returnDegrees = true)
