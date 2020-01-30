@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace AdventOfCode2019
 {
-    public class IntcodeComputer
+    class IntcodeComputer
     {
         long[] inputs;
         bool terminated, programLoaded;
