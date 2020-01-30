@@ -22,13 +22,13 @@ namespace AdventOfCode2019
             directionFacing = 0;
         }
 
-        public void paintPanels()
+        public void paintPanels(int startingPanelColour)
         {
             long nextI = 0;
             bool terminated = false;
-            long nextInput = 0;
+            long nextInput = startingPanelColour;
 
-            panels.Add(new Point(0, 0), 0); // Add start point
+            panels.Add(new Point(0, 0), startingPanelColour); // Add start point
 
             while (!terminated)
             {
@@ -54,7 +54,7 @@ namespace AdventOfCode2019
                 // First input is the colour to paint
                 panels[currentPanel] = (int)output;
 
-                if(nextI == -1)
+                if (nextI == -1)
                     break;
 
                 output = icp.runIntcodeProgramPausable(icp.getIntcodeProgram(), out nextI, out terminated, restartIndex: nextI);
@@ -89,6 +89,53 @@ namespace AdventOfCode2019
         public int panelsPainted()
         {
             return panels.Count;
+        }
+
+        public void displayHullPanels()
+        {
+            int maxX, maxY, minX, minY;
+            maxX = maxY = minX = minY = 0;
+
+            foreach (var key in panels.Keys)
+            {
+                if (key.X > maxX)
+                    maxX = key.X;
+                else if (key.Y > maxY)
+                    maxY = key.Y;
+                else if (key.X < minX)
+                    minX = key.X;
+                else if (key.Y < minY)
+                    minY = key.Y;
+            }
+            int width = maxX - minX +1;
+            int height = maxY - minY +1;
+
+            hullPaint = new int[width][];
+            for(int i = 0; i < width; i++)
+            {
+                hullPaint[i] = new int[height];
+            }
+
+            foreach(var panel in panels)
+            {
+                int newX = panel.Key.X-minX;
+                int newY = panel.Key.Y-minY;
+                hullPaint[newX][newY] = panel.Value;
+            }
+
+            for(int y = 0; y < height; y++)
+            {
+                string line = "";
+
+                for(int x = 0; x< width; x++)
+                {
+                    if(hullPaint[x][y] == 1)
+                        line += "#";
+                    else
+                        line += ".";
+                }
+                Console.WriteLine(line);
+            }
         }
     }
 }

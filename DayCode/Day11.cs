@@ -26,7 +26,7 @@ namespace AdventOfCode2019
         {
             HullPainterRobot robot = new HullPainterRobot(programLoc);
 
-            robot.paintPanels();
+            robot.paintPanels(0);
 
             long result = robot.panelsPainted();
 
@@ -35,9 +35,12 @@ namespace AdventOfCode2019
 
         public void solvePuzzle2()
         {
-            long result = 0;
+            HullPainterRobot robot = new HullPainterRobot(programLoc);
 
-            Console.WriteLine("Day11: Puzzle 2 solution - " + result);
+            robot.paintPanels(1);
+
+            Console.WriteLine("Day11: Puzzle 2 solution");
+            robot.displayHullPanels();
         }
     }
 }
