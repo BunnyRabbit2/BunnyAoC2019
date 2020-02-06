@@ -13,6 +13,7 @@ namespace AdventOfCode2019
         long result;
         long relativeBase;
         long[] intcodeProgram;
+        Dictionary<long, long> icPExtra;
 
         public IntcodeComputer()
         {
@@ -32,6 +33,7 @@ namespace AdventOfCode2019
             nextI = 0;
             result = 0;
             relativeBase = 0;
+            icPExtra = new Dictionary<long, long>();
         }
 
         public long[] getIntcodeProgram()
@@ -82,7 +84,7 @@ namespace AdventOfCode2019
             }
 
             long[] inputs = inputsIn ?? new long[0];
-            Dictionary<long, long> icPExtra = new Dictionary<long, long>();
+            
             long currentInput = 0;
             long output = 0;
 

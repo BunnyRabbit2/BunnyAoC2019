@@ -8,18 +8,19 @@ namespace AdventOfCode2019
     class HullPainterRobot
     {
         IntcodeComputer icp;
-        int[][] hullPaint;
-        Dictionary<Point, int> panels;
+        List<List<char>> hullPaint;
+        Dictionary<(int, int), int> panels;
         int positionX, positionY;
-        int directionFacing; // 0 = Up, 1 = Right, 2 = Down, 3 = Left
+        Directions directionFacing;
 
         public HullPainterRobot(string fileLocation)
         {
             icp = new IntcodeComputer(fileLocation);
-            panels = new Dictionary<Point, int>();
+            hullPaint = new List<List<char>>();
+            panels = new Dictionary<(int, int), int>();
             positionX = 0;
             positionY = 0;
-            directionFacing = 0;
+            directionFacing = Directions.Up;
         }
 
         public void paintPanels(int startingPanelColour)
@@ -28,33 +29,23 @@ namespace AdventOfCode2019
             bool terminated = false;
             long nextInput = startingPanelColour;
 
-            panels.Add(new Point(0, 0), startingPanelColour); // Add start point
+            panels.Add((0, 0), startingPanelColour); // Add start point
 
             while (!terminated)
             {
-                Point currentPanel = new Point(positionX, positionY);
-                bool panelCheck = panels.Keys.Any(key => key.X == currentPanel.X && key.Y == currentPanel.Y);
-                if (panelCheck)
-                {
-                    var panelKey = from panel in panels
-                                   where panel.Key.X == currentPanel.X && panel.Key.Y == currentPanel.Y
-                                   select panel;
-                    currentPanel = panelKey.First().Key;
-                }
-                else
-                {
-                    panels.Add(currentPanel, 0);
-                }
+                bool panelCheck = panels.ContainsKey((positionX, positionY));
+                if (!panelCheck)
+                    panels.Add((positionX, positionY), 0);
 
-                nextInput = panels[currentPanel];
+                nextInput = panels[(positionX, positionY)];
 
                 long output = icp.runIntcodeProgramPausable(icp.getIntcodeProgram(), out nextI, out terminated,
                     inputsIn: new long[] { nextInput }, restartIndex: nextI);
 
                 // First input is the colour to paint
-                panels[currentPanel] = (int)output;
+                panels[(positionX, positionY)] = (int)output;
 
-                if (nextI == -1)
+                if (terminated)
                     break;
 
                 output = icp.runIntcodeProgramPausable(icp.getIntcodeProgram(), out nextI, out terminated, restartIndex: nextI);
@@ -62,27 +53,14 @@ namespace AdventOfCode2019
                 // Second output is direction to move.
                 if (output == 0)
                 {
-                    if (directionFacing == 0)
-                        directionFacing = 3;
-                    else
-                        directionFacing--;
+                    directionFacing = Direction.TurnLeft(directionFacing);
                 }
-                else
+                else if (output == 1)
                 {
-                    if (directionFacing == 3)
-                        directionFacing = 0;
-                    else
-                        directionFacing++;
+                    directionFacing = Direction.TurnRight(directionFacing);
                 }
-
-                if (directionFacing == 0)
-                    positionY++;
-                else if (directionFacing == 1)
-                    positionX++;
-                else if (directionFacing == 2)
-                    positionY--;
-                else if (directionFacing == 3)
-                    positionX--;
+                positionX += Direction.DirectionValues[directionFacing].X;
+                positionY += Direction.DirectionValues[directionFacing].Y;
             }
         }
 
@@ -91,50 +69,57 @@ namespace AdventOfCode2019
             return panels.Count;
         }
 
+        void drawPoint(int x, int y, int value)
+        {
+            while (hullPaint.Count - 1 < y)
+            {
+                hullPaint.Add(new List<char>());
+            }
+
+            while (hullPaint[y].Count - 1 < x)
+            {
+                hullPaint[y].Add(' ');
+            }
+
+            char paint = (int)value == 1 ? '#' : ' ';
+            hullPaint[y][x] = paint;
+        }
+
+        void transferPanelsToPaint()
+        {
+            int minX, minY;
+            minX = minY = 0;
+
+            foreach(var pair in panels)
+            {
+                int pX = pair.Key.Item1;
+                int pY = pair.Key.Item2;
+
+                if(pX < minX) minX = pX;
+                if(pY < minY) minY = pY;
+            }
+
+            if(minX < 0) minX *= -1;
+            else minX = 0;
+            if(minY < 0) minY *= -1;
+            else minY = 0;
+
+            foreach(var pair in panels)
+            {
+                int pX = pair.Key.Item1;
+                int pY = pair.Key.Item2;
+                int paint = pair.Value;
+
+                drawPoint(pX + minX, pY + minY, paint);
+            }
+        }
+
         public void displayHullPanels()
         {
-            int maxX, maxY, minX, minY;
-            maxX = maxY = minX = minY = 0;
-
-            foreach (var key in panels.Keys)
+            transferPanelsToPaint();
+            foreach (List<char> line in hullPaint)
             {
-                if (key.X > maxX)
-                    maxX = key.X;
-                else if (key.Y > maxY)
-                    maxY = key.Y;
-                else if (key.X < minX)
-                    minX = key.X;
-                else if (key.Y < minY)
-                    minY = key.Y;
-            }
-            int width = maxX - minX +1;
-            int height = maxY - minY +1;
-
-            hullPaint = new int[width][];
-            for(int i = 0; i < width; i++)
-            {
-                hullPaint[i] = new int[height];
-            }
-
-            foreach(var panel in panels)
-            {
-                int newX = panel.Key.X-minX;
-                int newY = panel.Key.Y-minY;
-                hullPaint[newX][newY] = panel.Value;
-            }
-
-            for(int y = 0; y < height; y++)
-            {
-                string line = "";
-
-                for(int x = 0; x< width; x++)
-                {
-                    if(hullPaint[x][y] == 1)
-                        line += "#";
-                    else
-                        line += ".";
-                }
-                Console.WriteLine(line);
+                Console.WriteLine(new string(line.ToArray()));
             }
         }
     }
