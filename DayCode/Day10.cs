@@ -7,8 +7,6 @@ namespace AdventOfCode2019
 {
     public class Day10
     {
-        OrbitTree oTree;
-
         public static void solveDay10()
         {
             Day10 d10 = new Day10();

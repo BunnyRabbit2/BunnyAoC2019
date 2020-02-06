@@ -14,7 +14,6 @@ namespace AdventOfCode2019
             d11.solvePuzzle2();
         }
 
-        IntcodeComputer icP;
         string programLoc;
 
         public Day11()

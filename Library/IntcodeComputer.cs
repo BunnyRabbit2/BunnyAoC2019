@@ -7,7 +7,6 @@ namespace AdventOfCode2019
 {
     class IntcodeComputer
     {
-        long[] inputs;
         bool terminated, programLoaded;
         long nextI;
         long result;

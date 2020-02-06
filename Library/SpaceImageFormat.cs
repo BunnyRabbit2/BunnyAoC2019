@@ -97,7 +97,7 @@ namespace AdventOfCode2019
                 for (int w = 0; w < width; w++)
                 {
                     if (colourData[h + w] == 0)
-                        line += "-";
+                        line += " ";
                     else if (colourData[h + w] == 1)
                         line += "#";
                 }
