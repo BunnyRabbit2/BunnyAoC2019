@@ -107,5 +107,21 @@ namespace AdventOfCode2019
             else
                 return theta * (3.142f / 180.0f);
         }
+
+        public static long GCF(long a, long b)
+        {
+            while (b != 0)
+            {
+                long temp = b;
+                b = a % b;
+                a = temp;
+            }
+            return a;
+        }
+
+        public static long LCM(long a, long b)
+        {
+            return a * b / GCF(a,b);
+        }
     }
 }
