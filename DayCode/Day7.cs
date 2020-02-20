@@ -37,7 +37,12 @@ namespace AdventOfCode2019
 
                 for (int i = 0; i < ps.Count; i++)
                 {
-                    long output = icP.runIntcodeProgram(inputsIn: new long[] { ps[i], signal });
+                    icP.resetProgram();
+
+                    icP.addInput(ps[i]);
+                    icP.addInput(signal);
+
+                    long output = icP.runIntcodeProgramFull();
                     signal = output;
                 }
 
@@ -65,22 +70,23 @@ namespace AdventOfCode2019
                 {
                     amps.Add(new IntcodeComputer(programLoc));
                 }
-                long[] ampNextI = new long[5];
                 bool[] terminated = new bool[5];
 
                 // First loop round the amps
                 for (int i = 0; i < ps.Count; i++)
                 {
-                    signal = amps[i].runIntcodeProgramPausable(amps[i].getIntcodeProgram(), out ampNextI[i], out terminated[i],
-                                    inputsIn: new long[] { ps[i], signal });
+                    amps[i].addInput(ps[i]);
+                    amps[i].addInput(signal);
+
+                    signal = amps[i].runIntcodeProgram(out terminated[i]);
                 }
 
                 while (!terminated[4])
                 {
                     for (int i = 0; i < 5; i++)
                     {
-                        signal = amps[i].runIntcodeProgramPausable(amps[i].getIntcodeProgram(), out ampNextI[i], out terminated[i],
-                                    inputsIn: new long[] { signal }, restartIndex: ampNextI[i]);
+                        amps[i].addInput(signal);
+                        signal = amps[i].runIntcodeProgram(out terminated[i]);
                     }
                 }
 

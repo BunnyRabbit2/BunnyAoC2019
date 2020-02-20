@@ -29,7 +29,7 @@ namespace AdventOfCode2019
             icP.setValueToAddress(1, 12);
             icP.setValueToAddress(2, 2);
 
-            long result = icP.runIntcodeProgram(0);
+            long result = icP.runIntcodeProgramFull(0);
 
             Console.WriteLine("Day2: Puzzle 1 solution - " + result);
 
@@ -47,10 +47,12 @@ namespace AdventOfCode2019
             {
                 for (int v = 0; v < 99; v++)
                 {
+                    icP.resetProgram();
+
                     icP.setValueToAddress(1, n);
                     icP.setValueToAddress(2, v);
 
-                    long test = icP.runIntcodeProgram(0);
+                    long test = icP.runIntcodeProgramFull(0);
 
                     if (test == wantedResult)
                     {
