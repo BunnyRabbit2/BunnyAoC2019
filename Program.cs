@@ -20,6 +20,7 @@ namespace AdventOfCode2019
             // Day10.solveDay10();
             // Day11.solveDay11();
             // Day12.solveDay12();
+            Day13.solveDay13();
         }
     }
 }
