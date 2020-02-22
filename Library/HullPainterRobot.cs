@@ -25,7 +25,6 @@ namespace AdventOfCode2019
 
         public void paintPanels(int startingPanelColour)
         {
-            long nextI = 0;
             bool terminated = false;
             long nextInput = startingPanelColour;
 
@@ -39,8 +38,8 @@ namespace AdventOfCode2019
 
                 nextInput = panels[(positionX, positionY)];
 
-                long output = icp.runIntcodeProgramPausable(icp.getIntcodeProgram(), out nextI, out terminated,
-                    inputsIn: new long[] { nextInput }, restartIndex: nextI);
+                icp.addInput(nextInput);
+                long output = icp.runIntcodeProgram(out terminated);
 
                 // First input is the colour to paint
                 panels[(positionX, positionY)] = (int)output;
@@ -48,7 +47,7 @@ namespace AdventOfCode2019
                 if (terminated)
                     break;
 
-                output = icp.runIntcodeProgramPausable(icp.getIntcodeProgram(), out nextI, out terminated, restartIndex: nextI);
+                output = icp.runIntcodeProgram(out terminated);
 
                 // Second output is direction to move.
                 if (output == 0)

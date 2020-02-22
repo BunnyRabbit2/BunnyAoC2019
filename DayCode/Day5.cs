@@ -25,8 +25,8 @@ namespace AdventOfCode2019
         public void solvePuzzle1()
         {
             icP = new IntcodeComputer(programLoc);
-            long[] input = new long[] { 1 };
-            long result = icP.runIntcodeProgram(inputsIn: input);
+            icP.addInput(1);
+            long result = icP.runIntcodeProgramFull();
 
             Console.WriteLine("Day5: Puzzle 1 solution - " + result);
         }
@@ -34,8 +34,8 @@ namespace AdventOfCode2019
         public void solvePuzzle2()
         {
             icP = new IntcodeComputer(programLoc);
-            long[] input = new long[] { 5 };
-            long result = icP.runIntcodeProgram(inputsIn: input);
+            icP.addInput(5);
+            long result = icP.runIntcodeProgramFull();
 
             Console.WriteLine("Day5: Puzzle 2 solution - " + result);
         }
