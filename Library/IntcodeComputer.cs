@@ -176,10 +176,8 @@ namespace AdventOfCode2019
                     }
                     else
                     {
-                        Console.WriteLine("IntcodeComputer error. Program asked for input not provided");
-                        Console.WriteLine(">>> Number input being asked for: " + currentInput);
-                        Console.WriteLine(">>> Length of input array: " + inputs.Count);
-                        break;
+                        programTerminated = true;
+                        return -2; // The waiting for input command
                     }
                     continue;
                 }

@@ -22,19 +22,20 @@ namespace AdventOfCode2019
 
         public void solvePuzzle1()
         {
-
             ArcadeCabinet ac = new ArcadeCabinet(programLoc);
             ac.drawScreen();
             int result = ac.getNoOfTilesOfType(2);
 
-            Console.WriteLine("Day12: Puzzle 1 solution - " + result);
+            Console.WriteLine("Day13: Puzzle 1 solution - " + result);
         }
 
         public void solvePuzzle2()
         {
-            int result = 0;
+            ArcadeCabinet ac = new ArcadeCabinet(programLoc);
 
-            Console.WriteLine("Day12: Puzzle 2 solution - " + result);
+            long result = ac.playGame();
+
+            Console.WriteLine("Day13: Puzzle 2 solution - " + result);
         }
     }
 }
