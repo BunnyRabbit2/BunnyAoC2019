@@ -61,16 +61,48 @@ namespace AdventOfCode2019
             if (!inputsLoaded)
                 return;
 
-            stocks.addStock("ORE",1000000000000 );
+            stocks.stocks = new Dictionary<string, long> { { "ORE", 1000000000000 } };
+
+            Func<string, long, bool> tryMake = null;
+            tryMake = (target, amount) =>
+            {
+                var reaction = reactions[target];
+                var runs = (long)Math.Ceiling(amount / (double)reaction.Output.Value);
+                if (reaction.Inputs.Any(input => stocks.getStock(input.Key) < runs * input.Value && input.Key == "ORE"))
+                {
+                    return false;
+                }
+
+                var stockBackup = stocks.stocks.ToDictionary(a => a.Key, a => a.Value);
+                while (reaction.Inputs.Any(input => stocks.getStock(input.Key) < runs * input.Value))
+                {
+                    var mustMake = reaction.Inputs.First(input => stocks.getStock(input.Key) < runs * input.Value);
+                    var need = runs * mustMake.Value - stocks.getStock(mustMake.Key);
+                    if (!tryMake(mustMake.Key, need))
+                    {
+                        stocks.stocks = stockBackup;
+                        return false;
+                    }
+                }
+
+                foreach (var input in reaction.Inputs)
+                {
+                    stocks.addStock(input.Key, -runs * input.Value);
+                }
+
+                stocks.addStock(target, runs * reaction.Output.Value);
+
+                return true;
+            };
 
             var mf = 1000000;
-            while(mf > 0)
+            while (mf > 0)
             {
-                while(tryMake("FUEL", mf)){}
+                while (tryMake("FUEL", mf)) {}
                 mf /= 10;
             }
-            
-            long result = stocks.getStock("FUEL");
+           
+            long result = stocks.stocks["FUEL"];
 
             Console.WriteLine("Day14: Puzzle 2 solution - " + result);
         }
@@ -84,7 +116,7 @@ namespace AdventOfCode2019
                 var fill = deficits.First(kvp => kvp.Key != "ORE" && kvp.Value > 0);
                 var reac = reactions[fill.Key];
                 deficits[fill.Key] -= reac.Output.Value;
-                foreach (var input in reac.Input)
+                foreach (var input in reac.Inputs)
                 {
                     if (deficits.ContainsKey(input.Key))
                         deficits[input.Key] += input.Value;
@@ -94,36 +126,6 @@ namespace AdventOfCode2019
             }
 
             return deficits["ORE"];
-        }
-
-        bool tryMake(string target, long amount)
-        {
-            var reac = reactions[target];
-            long runs = (long)Math.Ceiling(amount / (double)reac.Output.Value);
-
-            if (reac.Input.Any(input => stocks.getStock(input.Key) < runs * input.Value && input.Key == "ORE"))
-                return false;
-
-            var stockBackup = stocks;
-            while (reac.Input.Any(input => stocks.getStock(input.Key) < runs * input.Value))
-            {
-                var mustMake = reac.Input.First(i => stocks.getStock(i.Key) < runs * i.Value);
-                var need = runs * mustMake.Value - stocks.getStock(mustMake.Key);
-                if (!tryMake(mustMake.Key, need))
-                {
-                    stocks = stockBackup;
-                    return false;
-                }
-            }
-
-            foreach (var i in reac.Input)
-            {
-                stocks.addStock(i.Key, -runs * i.Value);
-            }
-
-            stocks.addStock(target, runs * reac.Output.Value);
-
-            return true;
         }
     }
 }
