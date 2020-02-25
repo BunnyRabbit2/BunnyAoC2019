@@ -9,13 +9,17 @@ namespace AdventOfCode2019
     {
         IntcodeComputer icp;
         Dictionary<(int, int), char> tiles;
+        List<List<char>> map;
         int posX, posY;
+        CompassDirections facing;
 
         public RepairDroid(string fileLocation)
         {
             icp = new IntcodeComputer(fileLocation);
             tiles = new Dictionary<(int, int), char>();
+            map = new List<List<char>>();
             posX = posY = 0;
+            facing = CompassDirections.North;
         }
 
         public Point getOxygenSystemLoc()
@@ -36,16 +40,24 @@ namespace AdventOfCode2019
         {
             bool terminated = false;
             tiles.Add((posX, posY), '.');
+            int steps = 0;
 
-            Random rand = new Random();
-
-            while (!terminated && !tiles.Any(t => t.Value == '+'))
+            while (!terminated)
             {
-                CompassDirections dir = (CompassDirections)rand.Next(1,5);
-                int dist = rand.Next(1,21);
-                while(move(dir, out terminated) && dist > 0)
+                if(move(CompassDirection.getDirectionToRight(facing), out terminated))
                 {
-                    dist--;
+                    facing = CompassDirection.getDirectionToRight(facing);
+                }
+                else if(!move(facing, out terminated))
+                {
+                    facing = CompassDirection.getDirectionToLeft(facing);
+                }
+                steps++;
+
+                if(posX == 0 && posY == 0 && steps > 10)
+                {
+                    displayMap();
+                    terminated = true;
                 }
             }
         }
@@ -114,6 +126,59 @@ namespace AdventOfCode2019
             }
 
             return moved;
+        }
+
+        void drawPoint(int x, int y, char tile)
+        {
+            while (map.Count - 1 < y)
+            {
+                map.Add(new List<char>());
+            }
+
+            while (map[y].Count - 1 < x)
+            {
+                map[y].Add(' ');
+            }
+
+            map[y][x] = tile;
+        }
+
+        void convertTilesToMap()
+        {
+            int minX, minY;
+            minX = minY = 0;
+
+            foreach(var pair in tiles)
+            {
+                int pX = pair.Key.Item1;
+                int pY = pair.Key.Item2;
+
+                if(pX < minX) minX = pX;
+                if(pY < minY) minY = pY;
+            }
+
+            if(minX < 0) minX *= -1;
+            else minX = 0;
+            if(minY < 0) minY *= -1;
+            else minY = 0;
+
+            foreach(var pair in tiles)
+            {
+                int pX = pair.Key.Item1;
+                int pY = pair.Key.Item2;
+                char tile = pair.Value;
+
+                drawPoint(pX + minX, pY + minY, tile);
+            }
+        }
+
+        public void displayMap()
+        {
+            convertTilesToMap();
+            foreach (List<char> line in map)
+            {
+                Console.WriteLine(new string(line.ToArray()));
+            }
         }
     }
 }
