@@ -4,6 +4,14 @@ using System.Collections.Generic;
 
 namespace AdventOfCode2019
 {
+    public enum CompassDirections
+    {
+        North = 1,
+        East = 4,
+        South = 2,
+        West = 3
+    }
+
     public enum Directions
     {
         Up,
