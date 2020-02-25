@@ -41,45 +41,12 @@ namespace AdventOfCode2019
 
             while (!terminated && !tiles.Any(t => t.Value == '+'))
             {
-                List<int> rands = new List<int> {rand.Next(1,4)};
-                CompassDirections dir = (CompassDirections)rands[0];
-                while(move(dir, out terminated)){}
-
-                while(true)
+                CompassDirections dir = (CompassDirections)rand.Next(1,5);
+                int dist = rand.Next(1,21);
+                while(move(dir, out terminated) && dist > 0)
                 {
-                    int nextRand = rand.Next(1,4);
-                    if(!rands.Any(i => i == nextRand))
-                    {
-                        rands.Add(nextRand);
-                        dir = (CompassDirections)rands[1];
-                        break;
-                    }
+                    dist--;
                 }
-                while(move(dir, out terminated)){}
-
-                while(true)
-                {
-                    int nextRand = rand.Next(1,4);
-                    if(!rands.Any(i => i == nextRand))
-                    {
-                        rands.Add(nextRand);
-                        dir = (CompassDirections)rands[2];
-                        break;
-                    }
-                }
-                while(move(dir, out terminated)){}
-
-                while(true)
-                {
-                    int nextRand = rand.Next(1,4);
-                    if(!rands.Any(i => i == nextRand))
-                    {
-                        rands.Add(nextRand);
-                        dir = (CompassDirections)rands[3];
-                        break;
-                    }
-                }
-                while(move(dir, out terminated)){}
             }
         }
 
