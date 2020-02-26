@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
+using System.IO;
 
 namespace AdventOfCode2019
 {
@@ -127,9 +128,31 @@ namespace AdventOfCode2019
 
         public static int getShortestPath(Point start, Point destination, List<List<char>> map)
         {
+            if (map[start.Y][start.X] != 'S' || map[destination.Y][destination.X] != '+')
+                return -1;
+
             bool[,] visited = new bool[map.Count, map[1].Count];
 
             visited[start.X, start.Y] = true;
+
+            Func<Point, List<List<char>>, bool> isValid = null;
+            isValid = (p, m) =>
+            {
+                return (p.X >= 0) && (p.X < m.Count) &&
+                        (p.Y >= 0) && (p.Y < m[1].Count);
+            };
+
+            Action writeMap = () =>
+            {
+                List<string> lines = new List<string>();
+                foreach (List<char> line in map)
+                {
+                    string newLine = new string(line.ToArray());
+                    lines.Add(newLine);
+                }
+
+                File.WriteAllLines("MAP2.txt", lines);
+            };
 
             Queue<queueNode> q = new Queue<queueNode>();
 
@@ -147,22 +170,27 @@ namespace AdventOfCode2019
                 if (pt.X == destination.X && pt.Y == destination.Y)
                     return curr.dist;
 
+                if(curr.dist > 250)
+                    map[pt.Y][pt.X] = 'O';
+
+                // writeMap();
+
                 q.Dequeue();
 
                 for (int i = 0; i < 4; i++)
                 {
-                    int row = pt.X + rowNum[i];
-                    int col = pt.Y + colNum[i];
+                    int row = pt.Y + rowNum[i];
+                    int col = pt.X + colNum[i];
 
-                    if (map[row][col] == '.' && !visited[row, col])
+                    if (isValid(pt, map) && (map[row][col] == '.' || map[row][col] == '+'))
                     {
-                        visited[row, col] = true;
-                        queueNode AdjCell = new queueNode(new Point(row, col), curr.dist + 1);
+                        visited[col, row] = true;
+                        map[row][col] = 'X';
+                        queueNode AdjCell = new queueNode(new Point(col, row), curr.dist + 1);
                         q.Enqueue(AdjCell);
                     }
                 }
             }
-
             return -1;
         }
     }

@@ -22,21 +22,21 @@ namespace AdventOfCode2019
             map = new List<List<char>>();
             posX = posY = 0;
             facing = CompassDirections.North;
-            adjStart = new Point(0,0);
+            adjStart = new Point(0, 0);
         }
 
         public Point getOxygenSystemLoc(bool adjusted = false)
         {
-            Point osl = new Point(0,0);
+            Point osl = new Point(0, 0);
 
-            if(tiles.Any(t => t.Value == '+'))
+            if (tiles.Any(t => t.Value == '+'))
             {
                 var pos = tiles.First(t => t.Value == '+').Key;
                 osl.X = pos.Item1;
                 osl.Y = pos.Item2;
             }
 
-            if(adjusted)
+            if (adjusted)
             {
                 osl.X += adjStart.X;
                 osl.Y += adjStart.Y;
@@ -53,20 +53,19 @@ namespace AdventOfCode2019
 
             while (!terminated)
             {
-                if(move(CompassDirection.getDirectionToRight(facing), out terminated))
+                if (move(CompassDirection.getDirectionToRight(facing), out terminated))
                 {
                     facing = CompassDirection.getDirectionToRight(facing);
                 }
-                else if(!move(facing, out terminated))
+                else if (!move(facing, out terminated))
                 {
                     facing = CompassDirection.getDirectionToLeft(facing);
                 }
                 steps++;
 
-                if(posX == 0 && posY == 0 && steps > 10)
+                if (posX == 0 && posY == 0 && steps > 10)
                 {
                     convertTilesToMap();
-                    writeMap();
                     terminated = true;
                 }
             }
@@ -158,21 +157,21 @@ namespace AdventOfCode2019
             int minX, minY;
             minX = minY = 0;
 
-            foreach(var pair in tiles)
+            foreach (var pair in tiles)
             {
                 int pX = pair.Key.Item1;
                 int pY = pair.Key.Item2;
 
-                if(pX < minX) minX = pX;
-                if(pY < minY) minY = pY;
+                if (pX < minX) minX = pX;
+                if (pY < minY) minY = pY;
             }
 
-            if(minX < 0) minX *= -1;
+            if (minX < 0) minX *= -1;
             else minX = 0;
-            if(minY < 0) minY *= -1;
+            if (minY < 0) minY *= -1;
             else minY = 0;
 
-            foreach(var pair in tiles)
+            foreach (var pair in tiles)
             {
                 int pX = pair.Key.Item1;
                 int pY = pair.Key.Item2;
@@ -181,23 +180,36 @@ namespace AdventOfCode2019
                 drawPoint(pX + minX, pY + minY, tile);
             }
 
-            adjStart = new Point(minX,minY);
+            int maxX = 0;
+            foreach (var line in map)
+            {
+                if (line.Count > maxX)
+                    maxX = line.Count;
+            }
+            foreach (var line in map)
+            {
+                while (line.Count - 1 < maxX)
+                {
+                    line.Add(' ');
+                }
+            }
+
+            adjStart = new Point(minX, minY);
+            map[adjStart.Y][adjStart.X] = 'S';
         }
 
         public void displayMap()
         {
             convertTilesToMap();
-            map[adjStart.X][adjStart.Y] = 'S';
             foreach (List<char> line in map)
             {
                 Console.WriteLine(new string(line.ToArray()));
             }
         }
 
-        void writeMap()
+        public void writeMap()
         {
             List<string> lines = new List<string>();
-            map[adjStart.X][adjStart.Y] = 'S';
             foreach (List<char> line in map)
             {
                 string newLine = new string(line.ToArray());

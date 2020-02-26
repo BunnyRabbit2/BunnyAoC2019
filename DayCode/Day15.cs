@@ -26,8 +26,8 @@ namespace AdventOfCode2019
         {
             RepairDroid robot = new RepairDroid(programLoc);
             robot.createTiles();
+            // robot.writeMap();
             Point osl = robot.getOxygenSystemLoc(true);
-            // robot.displayMap();
 
             long result = AOCHelpers.getShortestPath(robot.adjStart, osl, robot.map);
 
