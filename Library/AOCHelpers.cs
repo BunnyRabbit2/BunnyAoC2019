@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Drawing;
 
 namespace AdventOfCode2019
 {
@@ -121,7 +122,60 @@ namespace AdventOfCode2019
 
         public static long LCM(long a, long b)
         {
-            return a * b / GCF(a,b);
+            return a * b / GCF(a, b);
+        }
+
+        public static int getShortestPath(Point start, Point destination, List<List<char>> map)
+        {
+            bool[,] visited = new bool[map.Count, map[1].Count];
+
+            visited[start.X, start.Y] = true;
+
+            Queue<queueNode> q = new Queue<queueNode>();
+
+            queueNode s = new queueNode(start, 0);
+            q.Enqueue(s);
+
+            int[] rowNum = { -1, 0, 0, 1 };
+            int[] colNum = { 0, -1, 1, 0 };
+
+            while (q.Count != 0)
+            {
+                queueNode curr = q.Peek();
+                Point pt = curr.pt;
+
+                if (pt.X == destination.X && pt.Y == destination.Y)
+                    return curr.dist;
+
+                q.Dequeue();
+
+                for (int i = 0; i < 4; i++)
+                {
+                    int row = pt.X + rowNum[i];
+                    int col = pt.Y + colNum[i];
+
+                    if (map[row][col] == '.' && !visited[row, col])
+                    {
+                        visited[row, col] = true;
+                        queueNode AdjCell = new queueNode(new Point(row, col), curr.dist + 1);
+                        q.Enqueue(AdjCell);
+                    }
+                }
+            }
+
+            return -1;
+        }
+    }
+
+    class queueNode
+    {
+        public Point pt;
+        public int dist;
+
+        public queueNode(Point ptIn, int distIn)
+        {
+            pt = ptIn;
+            dist = distIn;
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.IO;
 
 namespace AdventOfCode2019
 {
@@ -9,7 +10,8 @@ namespace AdventOfCode2019
     {
         IntcodeComputer icp;
         Dictionary<(int, int), char> tiles;
-        List<List<char>> map;
+        public List<List<char>> map;
+        public Point adjStart;
         int posX, posY;
         CompassDirections facing;
 
@@ -20,9 +22,10 @@ namespace AdventOfCode2019
             map = new List<List<char>>();
             posX = posY = 0;
             facing = CompassDirections.North;
+            adjStart = new Point(0,0);
         }
 
-        public Point getOxygenSystemLoc()
+        public Point getOxygenSystemLoc(bool adjusted = false)
         {
             Point osl = new Point(0,0);
 
@@ -31,6 +34,12 @@ namespace AdventOfCode2019
                 var pos = tiles.First(t => t.Value == '+').Key;
                 osl.X = pos.Item1;
                 osl.Y = pos.Item2;
+            }
+
+            if(adjusted)
+            {
+                osl.X += adjStart.X;
+                osl.Y += adjStart.Y;
             }
 
             return osl;
@@ -56,7 +65,8 @@ namespace AdventOfCode2019
 
                 if(posX == 0 && posY == 0 && steps > 10)
                 {
-                    displayMap();
+                    convertTilesToMap();
+                    writeMap();
                     terminated = true;
                 }
             }
@@ -170,15 +180,31 @@ namespace AdventOfCode2019
 
                 drawPoint(pX + minX, pY + minY, tile);
             }
+
+            adjStart = new Point(minX,minY);
         }
 
         public void displayMap()
         {
             convertTilesToMap();
+            map[adjStart.X][adjStart.Y] = 'S';
             foreach (List<char> line in map)
             {
                 Console.WriteLine(new string(line.ToArray()));
             }
+        }
+
+        void writeMap()
+        {
+            List<string> lines = new List<string>();
+            map[adjStart.X][adjStart.Y] = 'S';
+            foreach (List<char> line in map)
+            {
+                string newLine = new string(line.ToArray());
+                lines.Add(newLine);
+            }
+
+            File.WriteAllLines("MAP.txt", lines);
         }
     }
 }
