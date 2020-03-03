@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Drawing;
+using System.IO;
 
 namespace AdventOfCode2019
 {
@@ -121,7 +123,7 @@ namespace AdventOfCode2019
 
         public static long LCM(long a, long b)
         {
-            return a * b / GCF(a,b);
+            return a * b / GCF(a, b);
         }
     }
 }
