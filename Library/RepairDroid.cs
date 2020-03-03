@@ -218,5 +218,152 @@ namespace AdventOfCode2019
 
             File.WriteAllLines("MAP.txt", lines);
         }
+
+        public static int getShortestPath(Point start, Point destination, List<List<char>> map)
+        {
+            if (map[start.Y][start.X] != 'S' || map[destination.Y][destination.X] != '+')
+                return -1;
+
+            bool[,] visited = new bool[map.Count, map[1].Count];
+
+            visited[start.X, start.Y] = true;
+
+            Func<Point, List<List<char>>, bool> isValid = null;
+            isValid = (p, m) =>
+            {
+                return (p.X >= 0) && (p.X < m.Count) &&
+                        (p.Y >= 0) && (p.Y < m[1].Count);
+            };
+
+            Action writeMap = () =>
+            {
+                List<string> lines = new List<string>();
+                foreach (List<char> line in map)
+                {
+                    string newLine = new string(line.ToArray());
+                    lines.Add(newLine);
+                }
+
+                File.WriteAllLines("MAP2.txt", lines);
+            };
+
+            Queue<QueueNode> q = new Queue<QueueNode>();
+
+            QueueNode s = new QueueNode(start, 0);
+            q.Enqueue(s);
+
+            int[] rowNum = { -1, 0, 0, 1 };
+            int[] colNum = { 0, -1, 1, 0 };
+
+            while (q.Count != 0)
+            {
+                QueueNode curr = q.Peek();
+                Point pt = curr.pt;
+
+                if (pt.X == destination.X && pt.Y == destination.Y)
+                    return curr.dist;
+
+                if (curr.dist > 250)
+                    map[pt.Y][pt.X] = 'O';
+
+                // writeMap(); // FOR DEBUG PURPOSES ONLY
+
+                q.Dequeue();
+
+                for (int i = 0; i < 4; i++)
+                {
+                    int row = pt.Y + rowNum[i];
+                    int col = pt.X + colNum[i];
+
+                    if (isValid(pt, map) && (map[row][col] == '.' || map[row][col] == '+'))
+                    {
+                        visited[col, row] = true;
+                        map[row][col] = 'X';
+                        QueueNode AdjCell = new QueueNode(new Point(col, row), curr.dist + 1);
+                        q.Enqueue(AdjCell);
+                    }
+                }
+            }
+            return -1;
+        }
+
+        public static int getOxygenFillTime(Point oxyLoc, List<List<char>> map)
+        {
+            int steps = -1; // So the first location isn't counted
+
+            bool[,] visited = new bool[map.Count, map[1].Count];
+            visited[oxyLoc.X, oxyLoc.Y] = true;
+
+            Func<Point, List<List<char>>, bool> isValid = null;
+            isValid = (p, m) =>
+            {
+                return (p.X >= 0) && (p.X < m.Count) &&
+                        (p.Y >= 0) && (p.Y < m[1].Count);
+            };
+
+            Action writeMap = () =>
+            {
+                List<string> lines = new List<string>();
+                foreach (List<char> line in map)
+                {
+                    string newLine = new string(line.ToArray());
+                    lines.Add(newLine);
+                }
+
+                File.WriteAllLines("MAP3.txt", lines);
+            };
+
+            List<QueueNode> l = new List<QueueNode>();
+            List<QueueNode> nextL = new List<QueueNode>();
+
+            QueueNode s = new QueueNode(oxyLoc, 0);
+            nextL.Add(s);
+            map[oxyLoc.Y][oxyLoc.X] = 'X';
+
+            int[] rowNum = { -1, 0, 0, 1 };
+            int[] colNum = { 0, -1, 1, 0 };
+
+            while (nextL.Count != 0)
+            {
+                // writeMap(); // FOR DEBUG PURPOSES ONLY
+                l.Clear();
+                l = nextL.ToArray().ToList();
+                nextL.Clear();
+                steps++;
+
+                foreach (var qn in l)
+                {
+                    Point pt = qn.pt;
+
+                    for (int i = 0; i < 4; i++)
+                    {
+                        int row = pt.Y + rowNum[i];
+                        int col = pt.X + colNum[i];
+
+                        if (isValid(pt, map))
+                            if (visited[col, row] == false && map[row][col] != '#' && map[row][col] != ' ')
+                            {
+                                visited[col, row] = true;
+                                map[row][col] = 'X';
+                                QueueNode AdjCell = new QueueNode(new Point(col, row), qn.dist + 1);
+                                nextL.Add(AdjCell);
+                            }
+                    }
+                }
+            }
+            return steps;
+        }
+    }
+
+    class QueueNode
+    {
+        public Point pt;
+        public int dist;
+
+        public QueueNode(Point ptIn, int distIn)
+        {
+            pt = ptIn;
+            dist = distIn;
+        }
     }
 }

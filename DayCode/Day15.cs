@@ -29,7 +29,7 @@ namespace AdventOfCode2019
             // robot.writeMap();
             Point osl = robot.getOxygenSystemLoc(true);
 
-            long result = AOCHelpers.getShortestPath(robot.adjStart, osl, robot.map);
+            long result = RepairDroid.getShortestPath(robot.adjStart, osl, robot.map);
 
             Console.WriteLine("Day15: Puzzle 1 solution - " + result);
         }
@@ -37,8 +37,11 @@ namespace AdventOfCode2019
         public void solvePuzzle2()
         {
             RepairDroid robot = new RepairDroid(programLoc);
+            robot.createTiles();
 
-            long result = 0;
+            Point osl = robot.getOxygenSystemLoc(true);
+
+            long result = RepairDroid.getOxygenFillTime(osl, robot.map);
 
             Console.WriteLine("Day15: Puzzle 2 solution - " + result);
         }
