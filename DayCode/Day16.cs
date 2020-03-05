@@ -68,7 +68,32 @@ namespace AdventOfCode2019
         {
             if (!inputsLoaded) return;
 
-            long result = 0;
+            string result = "";
+
+            List<long> insaneList = new List<long>();
+            for (int i = 0; i < 10000; i++)
+            {
+                foreach(var n in inputs)
+                {
+                    insaneList.Add(n);
+                }
+            }
+
+            string messagePos = "";
+
+            for (int i = 0; i < 7; i++)
+            {
+                messagePos += inputs[i];
+            }
+
+            int messageP = int.Parse(messagePos);
+
+            var resultR = FFT(insaneList, 100);
+
+            for (int i = messageP; i < messageP+8; i++)
+            {
+                result += resultR[i];
+            }
 
             Console.WriteLine("Day16: Puzzle 2 solution - " + result);
         }
@@ -82,24 +107,32 @@ namespace AdventOfCode2019
             {
                 for (int n = 0; n < stepArr.Length; n++)
                 {
-                    List<int> patternList = new List<int>();
                     int currentP = 0;
+                    bool first = true;
+                    long nextN = 0;
+                    bool breakLoop = false;
+
                     for (int p = 0; p < stepArr.Length + 1; p=p)
                     {
                         for (int p2 = 0; p2 < n+1; p2++)
                         {
-                            patternList.Add(pattern[currentP]);
+                            if(first)
+                            {
+                                first = false;
+                                continue;
+                            }
+                            if(p >= stepArr.Length)
+                            {
+                                breakLoop = true;
+                                break;
+                            }
+
+                            nextN += pattern[currentP] * stepArr[p];
                             p++;
                         }
+                        if(breakLoop) break;
                         if (currentP == 3) currentP = 0;
                         else currentP++;
-                    }
-                    patternList.RemoveAt(0);
-                    long nextN = 0;
-
-                    for (int p = 0; p < stepArr.Length; p++)
-                    {
-                        nextN += patternList[p] * stepArr[p];
                     }
 
                     var NNS = nextN.ToString();
