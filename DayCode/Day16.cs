@@ -33,9 +33,9 @@ namespace AdventOfCode2019
                 string input = File.ReadAllText(fileLoc);
 
                 long i = 0;
-                var numbers = input.ToArray().Select(c => long.TryParse(c.ToString(), out i) ? i : -1).ToArray().ToList();
+                inputs = input.ToArray().Select(c => long.TryParse(c.ToString(), out i) ? i : -1).ToArray().ToList();
 
-                numbers.RemoveAll(n => n == -1);
+                inputs.RemoveAll(n => n == -1);
 
                 inputsLoaded = true;
             }
@@ -49,10 +49,17 @@ namespace AdventOfCode2019
         {
             if (!inputsLoaded) return;
 
-            long result = 0;
+            string result = "";
 
-            List<long> testList = new List<long> { 1, 2, 3, 4, 5, 6, 7, 8 };
-            List<long> restR = FFT(testList, 4);
+            var resultR = FFT(inputs, 100);
+
+            for (int i = 0; i < 8; i++)
+            {
+                result += resultR[i];
+            }
+
+            // List<long> testList = new List<long> { 1, 2, 3, 4, 5, 6, 7, 8 };
+            // List<long> restR = FFT(testList, 4);
 
             Console.WriteLine("Day16: Puzzle 1 solution - " + result);
         }
