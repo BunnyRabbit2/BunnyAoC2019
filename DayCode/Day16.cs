@@ -101,6 +101,7 @@ namespace AdventOfCode2019
         List<long> FFT(List<long> listIn, int steps)
         {
             long[] stepArr = listIn.ToArray();
+
             long[] nextArr = new long[stepArr.Length];
 
             for (int i = 0; i < steps; i++)
@@ -144,6 +145,57 @@ namespace AdventOfCode2019
             }
 
             return nextArr.ToList();
+        }
+    }
+
+    public class Day16ALT
+    {
+        private static byte[] _cache;
+
+        private static void Round(ref byte[] input, int from = 0)
+        {
+            var longsum = 0;
+
+            for (int k = from; k < input.Length; k++)
+            {
+                longsum += input[k];
+            }
+
+            for (int i = from; i < input.Length; i++)
+            {
+                _cache[i] = (byte)(longsum % 10);
+                longsum -= input[i];
+            }
+
+            var tmp = input;
+
+            input = _cache;
+            _cache = tmp;
+        }
+
+        public static void solve()
+        {
+
+            var input = File.ReadAllText("inputs/day16.txt").Select(x => (byte)(x - '0')).ToArray();
+
+            int repeats = 10_000;
+
+            var adjustedArray = new byte[input.Length * repeats];
+
+            for (int i = 0; i < repeats; i++)
+            {
+                Buffer.BlockCopy(input, 0, adjustedArray, input.Length * i, input.Length);
+            }
+
+            var offset = int.Parse(string.Join("", input.Take(7)));
+
+            _cache = new byte[adjustedArray.Length];
+            for (int i = 0; i < 100; i++)
+            {
+                Round(ref adjustedArray, offset);
+            }
+
+            Console.WriteLine(string.Join("", adjustedArray.Skip(offset).Take(8)));
         }
     }
 }
